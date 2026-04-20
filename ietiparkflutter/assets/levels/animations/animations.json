@@ -1,0 +1,1356 @@
+{
+  "animationGroups": [
+    {
+      "id": "__main__",
+      "name": "Main",
+      "collapsed": false
+    }
+  ],
+  "animations": [
+    {
+      "id": "anim_1776548802946154",
+      "name": "idle_cat1",
+      "mediaFile": "media/idle_cat1.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776548890032902",
+      "name": "run_cat1",
+      "mediaFile": "media/run_cat1.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776548975895258",
+      "name": "jump_cat1",
+      "mediaFile": "media/jump_cat1.png",
+      "startFrame": 0,
+      "endFrame": 10,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 7,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 8,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 9,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 10,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776698066982895",
+      "name": "idle_cat2",
+      "mediaFile": "media/idle_cat2.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776698144621465",
+      "name": "run_cat2",
+      "mediaFile": "media/run_cat2.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776698241705336",
+      "name": "jump_cat2",
+      "mediaFile": "media/jump_cat2.png",
+      "startFrame": 0,
+      "endFrame": 10,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 7,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 8,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 9,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 10,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776698286238299",
+      "name": "idle_cat3",
+      "mediaFile": "media/idle_cat3.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776698334344104",
+      "name": "run_cat3",
+      "mediaFile": "media/run_cat3.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776698419147014",
+      "name": "jump_cat3",
+      "mediaFile": "media/jump_cat3.png",
+      "startFrame": 1,
+      "endFrame": 10,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 7,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 8,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 9,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 10,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776699801506388",
+      "name": "idle_cat4",
+      "mediaFile": "media/idle_cat4.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776699986271591",
+      "name": "run_cat4",
+      "mediaFile": "media/run_cat4.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776700077747686",
+      "name": "jump_cat4",
+      "mediaFile": "media/jump_cat4.png",
+      "startFrame": 0,
+      "endFrame": 10,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5569221967963387,
+      "anchorY": 0.7693629028413426,
+      "anchorColor": "red",
+      "hitBoxes": [
+        {
+          "id": "__hb_1776701412545617_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.2009385726544622,
+          "y": 0.375,
+          "width": 0.65,
+          "height": 0.625
+        }
+      ],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 7,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 8,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 9,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        },
+        {
+          "frame": 10,
+          "anchorX": 0.5569221967963387,
+          "anchorY": 0.7693629028413426,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776701412545617_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2009385726544622,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anim_1776703599515731",
+      "name": "idle_cat5",
+      "mediaFile": "media/idle_cat5.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776703618810354",
+      "name": "idle_cat6",
+      "mediaFile": "media/idle_cat6.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776703644151016",
+      "name": "idle_cat7",
+      "mediaFile": "media/idle_cat7.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "anchorColor": "red",
+      "hitBoxes": [],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5,
+          "anchorY": 0.5,
+          "anchorColor": "red",
+          "hitBoxes": []
+        }
+      ]
+    },
+    {
+      "id": "anim_1776703663180788",
+      "name": "idle_cat8",
+      "mediaFile": "media/idle_cat8.png",
+      "startFrame": 0,
+      "endFrame": 6,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5027635750381388,
+      "anchorY": 0.6886903484935164,
+      "anchorColor": "red",
+      "hitBoxes": [
+        {
+          "id": "__hb_1776704861238357_4",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.0625,
+          "y": 0.0625,
+          "width": 0.8125,
+          "height": 0.9375
+        }
+      ],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704861238357_4",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0625,
+              "y": 0.0625,
+              "width": 0.8125,
+              "height": 0.9375
+            }
+          ]
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704857970788_3",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0625,
+              "width": 0.75,
+              "height": 0.9375
+            }
+          ]
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704853954428_2",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0625,
+              "width": 0.75,
+              "height": 0.9375
+            }
+          ]
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704850509014_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
+        },
+        {
+          "frame": 4,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704847433189_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
+        },
+        {
+          "frame": 5,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704836939777_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
+        },
+        {
+          "frame": 6,
+          "anchorX": 0.5027635750381388,
+          "anchorY": 0.6886903484935164,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1776704833681307_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0625,
+              "y": 0.0625,
+              "width": 0.8125,
+              "height": 0.9375
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
