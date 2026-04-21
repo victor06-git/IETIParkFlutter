@@ -418,7 +418,79 @@
       "tileWidth": 16,
       "tileHeight": 16,
       "selectionColorHex": "#FFCC00",
-      "groupId": "__main__"
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "run_cat5",
+      "fileName": "media/run_cat5.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 20,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "jump_cat5",
+      "fileName": "media/jump_cat5.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 24,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "run_cat6",
+      "fileName": "media/run_cat6.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 20,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "jump_cat6",
+      "fileName": "media/jump_cat6.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 24,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "run_cat7",
+      "fileName": "media/run_cat7.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 20,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "jump_cat7",
+      "fileName": "media/jump_cat7.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 24,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "run_cat8",
+      "fileName": "media/run_cat8.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 20,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
+    },
+    {
+      "name": "jump_cat8",
+      "fileName": "media/jump_cat8.png",
+      "mediaType": "spritesheet",
+      "tileWidth": 20,
+      "tileHeight": 24,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776697689770522_0"
     }
   ],
   "mediaGroups": [
