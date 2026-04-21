@@ -16,59 +16,139 @@
       "fps": 12.0,
       "loop": true,
       "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
+      "anchorX": 0.5001936737223494,
+      "anchorY": 0.6865450395690312,
       "anchorColor": "red",
-      "hitBoxes": [],
+      "hitBoxes": [
+        {
+          "id": "__hb_1776705029681171_4",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.0625,
+          "y": 0.0625,
+          "width": 0.8125,
+          "height": 0.9375
+        }
+      ],
       "frameRigs": [
         {
           "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705029681171_4",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0625,
+              "y": 0.0625,
+              "width": 0.8125,
+              "height": 0.9375
+            }
+          ]
         },
         {
           "frame": 1,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705026496457_3",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0625,
+              "width": 0.75,
+              "height": 0.9375
+            }
+          ]
         },
         {
           "frame": 2,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705023846580_2",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0625,
+              "width": 0.75,
+              "height": 0.9375
+            }
+          ]
         },
         {
           "frame": 3,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705020264463_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
         },
         {
           "frame": 4,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705017653292_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
         },
         {
           "frame": 5,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705013735167_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
         },
         {
           "frame": 6,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5001936737223494,
+          "anchorY": 0.6865450395690312,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705009342468_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0625,
+              "y": 0.0625,
+              "width": 0.8125,
+              "height": 0.9375
+            }
+          ]
         }
       ]
     },
@@ -81,59 +161,139 @@
       "fps": 12.0,
       "loop": true,
       "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
+      "anchorX": 0.5528356812547673,
+      "anchorY": 0.7990843702326469,
       "anchorColor": "red",
-      "hitBoxes": [],
+      "hitBoxes": [
+        {
+          "id": "__hb_1776705093920601_4",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.2,
+          "y": 0.3,
+          "width": 0.6,
+          "height": 0.7
+        }
+      ],
       "frameRigs": [
         {
           "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5528356812547673,
+          "anchorY": 0.7990843702326469,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705093920601_4",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.3,
+              "width": 0.6,
+              "height": 0.7
+            }
+          ]
         },
         {
           "frame": 1,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5551746639016019,
+          "anchorY": 0.6493522358886346,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705091201610_3",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.15,
+              "width": 0.55,
+              "height": 0.7
+            }
+          ]
         },
         {
           "frame": 2,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5506084334477498,
+          "anchorY": 0.5985352307398932,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705088525990_2",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.05,
+              "width": 0.6,
+              "height": 0.75
+            }
+          ]
         },
         {
           "frame": 3,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.551487414187643,
+          "anchorY": 0.7035063882532417,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705085619698_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.1,
+              "width": 0.55,
+              "height": 0.8
+            }
+          ]
         },
         {
           "frame": 4,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5525824156178489,
+          "anchorY": 0.7046535326086957,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705081856481_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.2,
+              "width": 0.6,
+              "height": 0.7
+            }
+          ]
         },
         {
           "frame": 5,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5520386393974066,
+          "anchorY": 0.7496454281083142,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705075914702_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.2,
+              "width": 0.6,
+              "height": 0.75
+            }
+          ]
         },
         {
           "frame": 6,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5535358862509534,
+          "anchorY": 0.7509936951754386,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705070154031_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.2,
+              "width": 0.65,
+              "height": 0.75
+            }
+          ]
         }
       ]
     },
@@ -146,87 +306,207 @@
       "fps": 12.0,
       "loop": true,
       "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
+      "anchorX": 0.5559299914187643,
+      "anchorY": 0.7924994636727689,
       "anchorColor": "red",
-      "hitBoxes": [],
+      "hitBoxes": [
+        {
+          "id": "__hb_1776705942700683_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.2,
+          "y": 0.375,
+          "width": 0.65,
+          "height": 0.625
+        }
+      ],
       "frameRigs": [
         {
           "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5559299914187643,
+          "anchorY": 0.7924994636727689,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705942700683_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.375,
+              "width": 0.65,
+              "height": 0.625
+            }
+          ]
         },
         {
           "frame": 1,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5511924342105263,
+          "anchorY": 0.7503828780511062,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705944913675_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.2916666666666667,
+              "width": 0.6,
+              "height": 0.6666666666666666
+            }
+          ]
         },
         {
           "frame": 2,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5498426773455377,
+          "anchorY": 0.7060241466437834,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705948058379_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.2,
+              "y": 0.25,
+              "width": 0.65,
+              "height": 0.5833333333333334
+            }
+          ]
         },
         {
           "frame": 3,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5521310068649885,
+          "anchorY": 0.6248599590007627,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705950959992_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.16666666666666666,
+              "width": 0.6,
+              "height": 0.75
+            }
+          ]
         },
         {
           "frame": 4,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5532394164759725,
+          "anchorY": 0.4600063763348589,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705638154933_3",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.08333333333333333,
+              "width": 0.6,
+              "height": 0.7916666666666666
+            }
+          ]
         },
         {
           "frame": 5,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5533913758581235,
+          "anchorY": 0.46173454185736085,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705635909230_2",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.041666666666666664,
+              "width": 0.6,
+              "height": 0.75
+            }
+          ]
         },
         {
           "frame": 6,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5513086384439359,
+          "anchorY": 0.5012812261632342,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705633673865_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.08333333333333333,
+              "width": 0.6,
+              "height": 0.6666666666666666
+            }
+          ]
         },
         {
           "frame": 7,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5559389302059496,
+          "anchorY": 0.6232807732646835,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705631333601_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.16666666666666666,
+              "width": 0.6,
+              "height": 0.6666666666666666
+            }
+          ]
         },
         {
           "frame": 8,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5517019450800915,
+          "anchorY": 0.7061284324942793,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705629305139_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.25,
+              "width": 0.6,
+              "height": 0.6666666666666666
+            }
+          ]
         },
         {
           "frame": 9,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.552720966819222,
+          "anchorY": 0.7149778318077803,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705131094595_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.25,
+              "width": 0.6,
+              "height": 0.625
+            }
+          ]
         },
         {
           "frame": 10,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.5995244565217391,
+          "anchorY": 0.7504499189549962,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705124747621_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.3333333333333333,
+              "width": 0.65,
+              "height": 0.5833333333333334
+            }
+          ]
         }
       ]
     },
@@ -239,24 +519,54 @@
       "fps": 12.0,
       "loop": true,
       "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
+      "anchorX": 0.4989645904843631,
+      "anchorY": 0.7519620637871853,
       "anchorColor": "red",
-      "hitBoxes": [],
+      "hitBoxes": [
+        {
+          "id": "__hb_1776705956776982_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.0625,
+          "y": 0.0625,
+          "width": 0.8125,
+          "height": 0.9375
+        }
+      ],
       "frameRigs": [
         {
           "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.4989645904843631,
+          "anchorY": 0.7519620637871853,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705956776982_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0625,
+              "y": 0.0625,
+              "width": 0.8125,
+              "height": 0.9375
+            }
+          ]
         },
         {
           "frame": 1,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.49733326182303583,
+          "anchorY": 0.7426433781464531,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705962919518_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0625,
+              "width": 0.75,
+              "height": 0.9375
+            }
+          ]
         },
         {
           "frame": 2,
@@ -284,14 +594,34 @@
           "anchorX": 0.5,
           "anchorY": 0.5,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705374146471_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.125,
+              "y": 0.0,
+              "width": 0.75,
+              "height": 1.0
+            }
+          ]
         },
         {
           "frame": 6,
           "anchorX": 0.5,
           "anchorY": 0.5,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776705378026388_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0625,
+              "y": 0.0625,
+              "width": 0.8125,
+              "height": 0.9375
+            }
+          ]
         }
       ]
     },
