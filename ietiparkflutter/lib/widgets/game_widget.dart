@@ -117,28 +117,41 @@ class _GameWidgetState extends State<GameWidget> {
     final players = _ws.remotePlayers.values.toList();
     final ld = _levelData!;
 
-    return InteractiveViewer(
-      minScale: 0.3,
-      maxScale: 3.0,
-      constrained: false,
-      child: SizedBox(
-        // FUENTE: game_data.json → levels[0].viewportWidth / viewportHeight
-        // calculado en LevelData.loadFromAssets() como worldWidth / worldHeight
-        width: ld.worldWidth,
-        height: ld.worldHeight,
-        child: CustomPaint(
-          painter: GamePainter(
-            levelData: ld,
-            sprites: _sprites,
-            remotePlayers: players,
-            connected: _ws.connected,
-            viewerNickname: _ws.confirmedNickname,
-            animTick: _animTick,
-            doors: _ws.doors,
+    final painter = GamePainter(
+      levelData: ld,
+      sprites: _sprites,
+      remotePlayers: players,
+      connected: _ws.connected,
+      viewerNickname: _ws.confirmedNickname,
+      animTick: _animTick,
+      doors: _ws.doors,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Escala uniforme para que el mundo lógico llene el espacio disponible
+        final scaleX = constraints.maxWidth / ld.worldWidth;
+        final scaleY = constraints.maxHeight / ld.worldHeight;
+        final scale = scaleX < scaleY ? scaleX : scaleY;
+        final scaledW = ld.worldWidth * scale;
+        final scaledH = ld.worldHeight * scale;
+
+        return InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 6.0,
+          constrained: true,
+          child: Center(
+            child: SizedBox(
+              width: scaledW,
+              height: scaledH,
+              child: CustomPaint(
+                painter: painter,
+                size: Size(scaledW, scaledH),
+              ),
+            ),
           ),
-          size: Size(ld.worldWidth, ld.worldHeight),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -198,6 +211,13 @@ class GamePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Escalar el canvas para que las coordenadas lógicas del juego
+    // (worldWidth x worldHeight) coincidan con el tamaño físico asignado.
+    // Así BG, tiles, sprites y jugadores usan todas las mismas coordenadas.
+    final scaleX = size.width / levelData.worldWidth;
+    final scaleY = size.height / levelData.worldHeight;
+    canvas.save();
+    canvas.scale(scaleX, scaleY);
     // ── 1. FONDOS ─────────────────────────────────────────────────────────────
     // Capas: "bg3" → "bg2" → "bg"  (de más lejano a más cercano)
     // FUENTE: game_data.json layers con name "bg3","bg2","bg"
@@ -232,6 +252,9 @@ class GamePainter extends CustomPainter {
       _drawCatPlayer(canvas, p);
     }
 
+    // Restaurar escala antes del UI (el texto se dibuja en coords de pantalla)
+    canvas.restore();
+
     // ── 6. UI ─────────────────────────────────────────────────────────────────
     _drawUI(canvas, size);
   }
@@ -253,11 +276,20 @@ class GamePainter extends CustomPainter {
       final img = sprites.get(path);
       if (img == null) continue;
 
-      // ✅ CORRECCIÓN: estas capas son imágenes únicas (un solo "tile" 320x180).
-      // Se dibujan directamente con drawImage en su posición (layer.x, layer.y).
-      // NO se itera el tileMap porque solo tiene [[0]] y tratar 320px como tileSize
-      // generaría un rect enorme fuera de pantalla.
-      canvas.drawImage(img, Offset(layer.x, layer.y), Paint());
+      // Escalar la imagen BG para cubrir todo el mundo (worldWidth x worldHeight)
+      final dst = Rect.fromLTWH(
+        layer.x,
+        layer.y,
+        levelData.worldWidth - layer.x,
+        levelData.worldHeight - layer.y,
+      );
+      final src = Rect.fromLTWH(
+        0,
+        0,
+        img.width.toDouble(),
+        img.height.toDouble(),
+      );
+      canvas.drawImageRect(img, src, dst, Paint());
     }
   }
 
@@ -322,45 +354,39 @@ class GamePainter extends CustomPainter {
   //  Coordenadas corregidas: las del JSON, NO las del código original
   // ───────────────────────────────────────────────────────────────────────────
   void _drawStaticSprites(Canvas canvas) {
-    // Shop (animado)
-    // game_data.json → mediaAssets "shop_anim": tileWidth:118, tileHeight:126
-    // Coordenada: no aparece en sprites[], usa posición conocida del editor
-    // ⚠️ Si añades "shop" a sprites[] en game_data.json, leer de levelData.sprites
-    _drawSpriteFrame(
-      canvas,
-      'assets/levels/media/shop_anim.png',
-      x: 118,
-      y: 153, // ← posición del editor (centro del sprite en el mundo)
-      frameW: 118,
-      frameH: 126,
-      frame: (animTick ~/ 3) % 4,
-    );
+    // Itera los sprites del JSON usando sus coordenadas y dimensiones exactas.
+    // El canvas ya está escalado (canvas.scale en paint()), así que 1 unidad
+    // lógica aquí = 1 px del viewport del editor (320x180). Todo queda alineado.
+    for (final sprite in levelData.sprites) {
+      if (sprite.imageFile.isEmpty) continue;
+      final path = 'assets/levels/${sprite.imageFile}';
+      final img = sprites.get(path);
+      if (img == null) continue;
 
-    // Tree
-    // FUENTE: game_data.json → sprites[3]: name:"tree", x:262, y:153, w:128, h:128
-    //         imageFile: "media/tree1.png"
-    _drawSpriteFrame(
-      canvas,
-      'assets/levels/media/tree1.png',
-      x: 262,
-      y: 153,
-      frameW: 128,
-      frameH: 128,
-      frame: 0,
-    );
+      // frame 0 del spritesheet (src = primer tile)
+      // Para shop_anim usamos el frame animado
+      final isAnim =
+          sprite.name == 'shop_anim' || sprite.imageFile.contains('shop_anim');
+      final frameW = img.width.toDouble(); // imagen completa como frame único
+      final frameH = img.height.toDouble();
 
-    // Potion
-    // FUENTE: game_data.json → sprites[4]: name:"potion", x:157, y:160, w:32, h:32
-    //         imageFile: "media/Icon1.png"
-    _drawSpriteFrame(
-      canvas,
-      'assets/levels/media/Icon1.png',
-      x: 157,
-      y: 160,
-      frameW: 32,
-      frameH: 32,
-      frame: 0,
-    );
+      // Si es un spritesheet con múltiples frames en horizontal, recortamos el primero
+      // usando el width del sprite del JSON como ancho de frame
+      final fw = sprite.width > 0 ? sprite.width : frameW;
+      final fh = sprite.height > 0 ? sprite.height : frameH;
+      final cols = (img.width / fw).floor().clamp(1, 9999);
+      final frame = isAnim ? (animTick ~/ 3) % cols : 0;
+      final srcCol = frame % cols;
+
+      final src = Rect.fromLTWH(srcCol * fw, 0, fw, fh);
+      final dst = Rect.fromLTWH(
+        sprite.x,
+        sprite.y,
+        sprite.width,
+        sprite.height,
+      );
+      canvas.drawImageRect(img, src, dst, Paint());
+    }
   }
 
   void _drawSpriteFrame(
@@ -371,6 +397,8 @@ class GamePainter extends CustomPainter {
     required int frameW,
     required int frameH,
     required int frame,
+    double? dstW,
+    double? dstH,
   }) {
     final img = sprites.get(path);
     if (img == null) return;
@@ -387,9 +415,12 @@ class GamePainter extends CustomPainter {
       frameW.toDouble(),
       frameH.toDouble(),
     );
-    // Anclar desde esquina superior-izquierda del sprite
-    // x,y vienen directamente del JSON (top-left del sprite)
-    final dst = Rect.fromLTWH(x, y, frameW.toDouble(), frameH.toDouble());
+    final dst = Rect.fromLTWH(
+      x,
+      y,
+      dstW ?? frameW.toDouble(),
+      dstH ?? frameH.toDouble(),
+    );
     canvas.drawImageRect(img, src, dst, Paint());
   }
 

@@ -39,6 +39,31 @@ class Zone {
   Rect get rect => Rect.fromLTWH(x, y, width, height);
 }
 
+/// Sprite estático del nivel (game_data.json → levels[0].sprites[])
+class SpriteData {
+  final String name;
+  final String imageFile;
+  final double x, y, width, height;
+  final String animationId;
+
+  SpriteData({
+    required this.name, required this.imageFile,
+    required this.x, required this.y,
+    required this.width, required this.height,
+    required this.animationId,
+  });
+
+  factory SpriteData.fromJson(Map<String, dynamic> json) => SpriteData(
+    name: json['name'] ?? '',
+    imageFile: json['imageFile'] ?? '',
+    x: (json['x'] ?? 0).toDouble(),
+    y: (json['y'] ?? 0).toDouble(),
+    width: (json['width'] ?? 0).toDouble(),
+    height: (json['height'] ?? 0).toDouble(),
+    animationId: json['animationId'] ?? '',
+  );
+}
+
 /// Una capa del nivel con su tilemap y referencia a la textura.
 class LayerData {
   final String name;
@@ -85,6 +110,7 @@ class AnimationData {
 class LevelData {
   final List<Zone> zones;
   final List<LayerData> layers;
+  final List<SpriteData> sprites;
   final Map<String, AnimationData> animations;
   final String levelName;
   final double worldWidth;
@@ -92,6 +118,7 @@ class LevelData {
 
   LevelData({
     required this.zones, required this.layers,
+    required this.sprites,
     required this.animations, required this.levelName,
     required this.worldWidth, required this.worldHeight,
   });
@@ -143,6 +170,11 @@ class LevelData {
       }
     }
 
+    // Cargar sprites estáticos
+    final sprites = (level['sprites'] as List? ?? [])
+        .map((s) => SpriteData.fromJson(s as Map<String, dynamic>))
+        .toList();
+
     // Cargar animaciones
     final animations = <String, AnimationData>{};
     try {
@@ -156,10 +188,12 @@ class LevelData {
       debugPrint('Error cargando animaciones: $e');
     }
 
-    // Calcular world size
+    // Calcular world size — excluir capas BG (imagen única, no tilemap real)
+    const bgNames = {'bg', 'bg2', 'bg3'};
     double ww = viewportX + viewportW;
     double wh = viewportY + viewportH;
     for (final l in layers) {
+      if (bgNames.contains(l.name)) continue;
       final cols = l.tiles.isEmpty ? 0 : l.tiles.map((r) => r.length).reduce((a, b) => a > b ? a : b);
       ww = [ww, l.x + cols * l.tileWidth].reduce((a, b) => a > b ? a : b);
       wh = [wh, l.y + l.tiles.length * l.tileHeight].reduce((a, b) => a > b ? a : b);
@@ -172,7 +206,7 @@ class LevelData {
     debugPrint(' ${zones.length} zonas, ${layers.length} capas, ${animations.length} anims, world: ${ww}x$wh');
 
     return LevelData(
-      zones: zones, layers: layers, animations: animations,
+      zones: zones, layers: layers, sprites: sprites, animations: animations,
       levelName: 'Tutorial level',
       worldWidth: ww, worldHeight: wh,
     );
