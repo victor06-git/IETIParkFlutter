@@ -64,6 +64,7 @@ flutter:
     - assets/levels/media/
     - assets/levels/paths/
     - assets/levels/animations/
+    - assets/levels/game_data.json 
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

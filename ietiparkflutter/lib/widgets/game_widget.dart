@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import '../models/game_models.dart';
 import '../services/websocket_service.dart';
+import '../services/sprite_loader.dart';
 
 class GameWidget extends StatefulWidget {
   const GameWidget({super.key});
@@ -12,43 +13,70 @@ class GameWidget extends StatefulWidget {
 }
 
 class _GameWidgetState extends State<GameWidget> {
-  late Future<LevelData> _levelData;
-  Offset _cameraPosition = Offset.zero;
-
-  // WebSocket
+  late Future<LevelData> _levelDataFuture;
+  LevelData? _levelData;
+  final SpriteLoader _sprites = SpriteLoader();
   late WebSocketService _ws;
-
-  // Timer para refrescar el canvas con datos del server
   Timer? _renderTimer;
+  bool _assetsReady = false;
+
+  // Animación local: contador de ticks para animar frames
+  int _animTick = 0;
 
   @override
   void initState() {
     super.initState();
-    _levelData = LevelData.loadFromAssets();
-    _cameraPosition = const Offset(0, 0);
+    _levelDataFuture = LevelData.loadFromAssets();
+    _levelDataFuture.then((data) async {
+      _levelData = data;
+      debugPrint('[GameWidget] LevelData cargado, cargando assets...');
+      await _loadAllAssets(data);
+      debugPrint('[GameWidget] Assets cargados, listo para renderizar');
+      if (mounted) setState(() => _assetsReady = true);
+    }).catchError((e) {
+      debugPrint('[GameWidget] ERROR cargando nivel: $e');
+    });
 
-    // Conectar al server — cambia la URL si usas localhost
     _ws = WebSocketService(serverUrl: 'wss://pico2.ieti.site');
-    // _ws = WebSocketService(serverUrl: 'ws://localhost:8080');
     _ws.connect();
-
-    // Unirse como viewer para recibir broadcasts
     Future.delayed(const Duration(milliseconds: 500), () {
       _ws.sendJoin('flutter_viewer');
     });
-
-    // Escuchar cambios del WebSocket
     _ws.addListener(_onWsUpdate);
 
-    // Refrescar el canvas a ~30fps para animaciones suaves
-    _renderTimer = Timer.periodic(const Duration(milliseconds: 33), (_) {
+    // ~20fps render + animación tick
+    _renderTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      _animTick++;
       if (mounted) setState(() {});
     });
   }
 
+  Future<void> _loadAllAssets(LevelData data) async {
+    final paths = <String>{};
+
+    // Fondos y tilemaps
+    for (final layer in data.layers) {
+      if (layer.tilesTexturePath.isNotEmpty) {
+        paths.add('assets/levels/${layer.tilesTexturePath}');
+      }
+    }
+
+    // Sprites de gatos: idle, run, jump para cat1-cat8
+    for (int i = 1; i <= 8; i++) {
+      paths.add('assets/levels/media/idle_cat$i.png');
+      paths.add('assets/levels/media/run_cat$i.png');
+      paths.add('assets/levels/media/jump_cat$i.png');
+    }
+
+    // Otros sprites (shop, tree, potion)
+    paths.add('assets/levels/media/shop_anim.png');
+    paths.add('assets/levels/media/tree1.png');
+    paths.add('assets/levels/media/Icon1.png');
+
+    await _sprites.loadAll(paths.toList());
+  }
+
   void _onWsUpdate() {
-    // El Timer ya hace setState periódico, pero si queremos
-    // reaccionar inmediato a eventos importantes:
     if (mounted) setState(() {});
   }
 
@@ -57,267 +85,305 @@ class _GameWidgetState extends State<GameWidget> {
     _renderTimer?.cancel();
     _ws.removeListener(_onWsUpdate);
     _ws.dispose();
+    _sprites.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<LevelData>(
-      future: _levelData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 20),
-                Text('Cargando nivel...'),
-              ],
-            ),
-          );
-        }
+    if (!_assetsReady || _levelData == null) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            Text('Cargando assets...'),
+          ],
+        ),
+      );
+    }
 
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error, size: 50, color: Colors.red),
-                const SizedBox(height: 20),
-                Text('Error: ${snapshot.error}'),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _levelData = LevelData.loadFromAssets();
-                    });
-                  },
-                  child: const Text('Reintentar'),
-                ),
-              ],
-            ),
-          );
-        }
+    final players = _ws.remotePlayers.values.toList();
+    final ld = _levelData!;
 
-        final levelData = snapshot.data!;
-        final players = _ws.remotePlayers.values.toList();
-
-        return InteractiveViewer(
-          minScale: 0.5,
-          maxScale: 2.0,
-          constrained: false,
-          child: SizedBox(
-            width: 2000,
-            height: 600,
-            child: CustomPaint(
-              painter: GamePainter(
-                zones: levelData.zones,
-                layers: levelData.layers,
-                animations: levelData.animations,
-                remotePlayers: players,
-                connected: _ws.connected,
-                viewerNickname: _ws.confirmedNickname,
-              ),
-              size: const Size(2000, 600),
-            ),
+    return InteractiveViewer(
+      minScale: 0.3,
+      maxScale: 3.0,
+      constrained: false,
+      child: SizedBox(
+        width: ld.worldWidth,
+        height: ld.worldHeight,
+        child: CustomPaint(
+          painter: GamePainter(
+            levelData: ld,
+            sprites: _sprites,
+            remotePlayers: players,
+            connected: _ws.connected,
+            viewerNickname: _ws.confirmedNickname,
+            animTick: _animTick,
+            doors: _ws.doors,
           ),
-        );
-      },
+          size: Size(ld.worldWidth, ld.worldHeight),
+        ),
+      ),
     );
   }
 }
 
 class GamePainter extends CustomPainter {
-  final List<Zone> zones;
-  final List<TileMap> layers;
-  final Map<String, AnimationData> animations;
+  final LevelData levelData;
+  final SpriteLoader sprites;
   final List<RemotePlayer> remotePlayers;
   final bool connected;
   final String? viewerNickname;
+  final int animTick;
+  final List<DoorState> doors;
 
-  // Colores para distinguir jugadores
-  static const _playerColors = [
-    Colors.orange,
-    Colors.blue,
-    Colors.green,
-    Colors.purple,
-    Colors.red,
-    Colors.teal,
-    Colors.pink,
-    Colors.cyan,
-  ];
+  // Frame sizes por tipo de animación
+  static const _frameSizes = {
+    'idle': (w: 16, h: 16, frames: 7),
+    'run': (w: 20, h: 20, frames: 7),
+    'jump': (w: 20, h: 24, frames: 11),
+  };
 
   GamePainter({
-    required this.zones,
-    required this.layers,
-    required this.animations,
+    required this.levelData,
+    required this.sprites,
     required this.remotePlayers,
     required this.connected,
     this.viewerNickname,
+    required this.animTick,
+    required this.doors,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Fondo
-    final bgPaint = Paint()..color = Colors.grey[200]!;
-    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPaint);
+    // 1. Fondos (capas de fondo)
+    _drawBackgrounds(canvas);
 
-    _drawGrid(canvas, size);
+    // 2. Tilemap principal (capa "level")
+    _drawTileLayers(canvas);
 
-    for (var layer in layers) {
-      _drawTileLayer(canvas, layer);
-    }
+    // 3. Sprites estáticos (shop, tree, potion)
+    _drawStaticSprites(canvas);
 
-    for (var zone in zones) {
-      _drawZone(canvas, zone);
-    }
+    // 4. Puertas
+    _drawDoors(canvas);
 
-    // Dibujar cada jugador remoto
-    for (int i = 0; i < remotePlayers.length; i++) {
-      final p = remotePlayers[i];
-      // No dibujar al viewer (nosotros mismos)
+    // 5. Jugadores remotos (gatos con sprites reales)
+    for (final p in remotePlayers) {
       if (p.nickname == viewerNickname) continue;
-      final color = _playerColors[i % _playerColors.length];
-      _drawRemotePlayer(canvas, p, color);
+      _drawCatPlayer(canvas, p);
     }
 
-    // UI overlay
+    // 6. UI overlay
     _drawUI(canvas, size);
   }
 
-  void _drawGrid(Canvas canvas, Size size) {
-    final gridPaint = Paint()
-      ..color = Colors.grey[300]!
-      ..strokeWidth = 0.5;
-    for (double x = 0; x < size.width; x += 50) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
-    }
-    for (double y = 0; y < size.height; y += 50) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
+  void _drawBackgrounds(Canvas canvas) {
+    // Dibujar capas de fondo en orden: background3, background2, background
+    for (final layer in levelData.layers.reversed) {
+      if (!layer.name.startsWith('background')) continue;
+      final path = 'assets/levels/${layer.tilesTexturePath}';
+      final img = sprites.get(path);
+      if (img == null) continue;
+      canvas.drawImage(img, Offset(layer.x, layer.y), Paint());
     }
   }
 
-  void _drawTileLayer(Canvas canvas, TileMap layer) {
-    const tileSize = 32.0;
-    final colors = [
-      Colors.green[100]!,
-      Colors.green[200]!,
-      Colors.brown[100]!,
-      Colors.brown[200]!,
-      Colors.orange[100]!,
-    ];
-    final layerColor = colors[layer.layerIndex % colors.length].withOpacity(0.7);
-    final tilePaint = Paint()..color = layerColor;
+  void _drawTileLayers(Canvas canvas) {
+    for (final layer in levelData.layers) {
+      if (layer.name.startsWith('background') || !layer.visible) continue;
+      final path = 'assets/levels/${layer.tilesTexturePath}';
+      final img = sprites.get(path);
+      if (img == null) continue;
 
-    for (int y = 0; y < layer.tiles.length; y++) {
-      for (int x = 0; x < layer.tiles[y].length; x++) {
-        if (layer.tiles[y][x] > 0) {
-          canvas.drawRect(
-            Rect.fromLTWH(x * tileSize, y * tileSize, tileSize, tileSize),
-            tilePaint,
+      final tw = layer.tileWidth;
+      final th = layer.tileHeight;
+      if (tw <= 0 || th <= 0) continue;
+
+      final cols = img.width ~/ tw;
+      if (cols <= 0) continue;
+
+      for (int row = 0; row < layer.tiles.length; row++) {
+        for (int col = 0; col < layer.tiles[row].length; col++) {
+          final tileId = layer.tiles[row][col];
+          if (tileId < 0) continue;
+
+          final srcCol = tileId % cols;
+          final srcRow = tileId ~/ cols;
+          final src = Rect.fromLTWH(
+            srcCol * tw.toDouble(),
+            srcRow * th.toDouble(),
+            tw.toDouble(),
+            th.toDouble(),
           );
-          final borderPaint = Paint()
-            ..color = Colors.black.withOpacity(0.1)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 0.5;
-          canvas.drawRect(
-            Rect.fromLTWH(x * tileSize, y * tileSize, tileSize, tileSize),
-            borderPaint,
+          final dst = Rect.fromLTWH(
+            layer.x + col * tw.toDouble(),
+            layer.y + row * th.toDouble(),
+            tw.toDouble(),
+            th.toDouble(),
           );
+          canvas.drawImageRect(img, src, dst, Paint());
         }
       }
     }
   }
 
-  void _drawZone(Canvas canvas, Zone zone) {
-    canvas.drawRect(zone.rect, Paint()..color = zone.color);
-    final borderPaint = Paint()
-      ..color = Colors.black.withOpacity(0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    canvas.drawRect(zone.rect, borderPaint);
-
-    final tp = TextPainter(
-      text: TextSpan(
-        text: zone.name,
-        style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, Offset(zone.x + 5, zone.y + 5));
+  void _drawStaticSprites(Canvas canvas) {
+    // Shop
+    _drawSpriteFrame(canvas, 'assets/levels/media/shop_anim.png',
+        666, 335, 118, 126, (animTick ~/ 3) % 4);
+    // Tree
+    _drawSpriteFrame(canvas, 'assets/levels/media/tree1.png',
+        1147, 337, 128, 128, 0);
+    // Potion
+    _drawSpriteFrame(canvas, 'assets/levels/media/Icon1.png',
+        903, 316, 32, 32, 0);
   }
 
-  void _drawRemotePlayer(Canvas canvas, RemotePlayer p, Color color) {
-    final px = p.x;
-    final py = p.y;
-    final facingRight = p.dir != 'LEFT';
+  void _drawSpriteFrame(Canvas canvas, String path, double x, double y,
+      int frameW, int frameH, int frame) {
+    final img = sprites.get(path);
+    if (img == null) return;
 
-    // Cuerpo
-    final bodyPaint = Paint()..color = color;
-    canvas.drawRect(Rect.fromLTWH(px - 20, py - 40, 40, 60), bodyPaint);
+    final cols = (img.width / frameW).floor();
+    if (cols <= 0) return;
+    final srcCol = frame % cols;
+    final srcRow = frame ~/ cols;
 
-    // Cabeza
-    canvas.drawCircle(Offset(px, py - 45), 18, bodyPaint);
-
-    // Orejas
-    final earPaint = Paint()..color = HSLColor.fromColor(color).withLightness(0.35).toColor();
-    canvas.drawRect(Rect.fromLTWH(px - 25, py - 58, 12, 15), earPaint);
-    canvas.drawRect(Rect.fromLTWH(px + 13, py - 58, 12, 15), earPaint);
-
-    // Ojos
-    canvas.drawCircle(
-      Offset(px - (facingRight ? 8 : -8), py - 50), 5, Paint()..color = Colors.white,
+    final src = Rect.fromLTWH(
+      srcCol * frameW.toDouble(),
+      srcRow * frameH.toDouble(),
+      frameW.toDouble(),
+      frameH.toDouble(),
     );
-    canvas.drawCircle(
-      Offset(px - (facingRight ? 7 : -7), py - 50), 3, Paint()..color = Colors.black,
+    // Anclar desde el centro-abajo del sprite
+    final dst = Rect.fromLTWH(
+      x - frameW / 2,
+      y - frameH / 2,
+      frameW.toDouble(),
+      frameH.toDouble(),
     );
+    canvas.drawImageRect(img, src, dst, Paint());
+  }
 
-    // Nariz
-    canvas.drawCircle(Offset(px, py - 43), 3, Paint()..color = Colors.pink);
+  void _drawDoors(Canvas canvas) {
+    for (final door in doors) {
+      final paint = Paint()
+        ..color = door.open
+            ? Colors.green.withOpacity(0.3)
+            : Colors.red.withOpacity(0.6);
+      canvas.drawRect(
+        Rect.fromLTWH(door.x, door.y, door.w, door.h),
+        paint,
+      );
+      // Borde
+      final border = Paint()
+        ..color = door.open ? Colors.green : Colors.red
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2;
+      canvas.drawRect(
+        Rect.fromLTWH(door.x, door.y, door.w, door.h),
+        border,
+      );
+      // Label
+      final tp = TextPainter(
+        text: TextSpan(
+          text: door.open ? 'OPEN' : 'CLOSED',
+          style: TextStyle(
+            color: door.open ? Colors.green : Colors.red,
+            fontSize: 8,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas, Offset(door.x + 2, door.y - 10));
+    }
+  }
 
-    // Bigotes
-    final whisker = Paint()..color = Colors.black..strokeWidth = 1;
-    canvas.drawLine(Offset(px - 15, py - 45), Offset(px - 25, py - 48), whisker);
-    canvas.drawLine(Offset(px - 15, py - 43), Offset(px - 25, py - 43), whisker);
-    canvas.drawLine(Offset(px + 15, py - 45), Offset(px + 25, py - 48), whisker);
-    canvas.drawLine(Offset(px + 15, py - 43), Offset(px + 25, py - 43), whisker);
+  void _drawCatPlayer(Canvas canvas, RemotePlayer p) {
+    // Determinar qué spritesheet usar según la animación
+    final catNum = _extractCatNumber(p.cat);
+    if (catNum == null) return;
+
+    final animType = p.anim.isEmpty ? 'idle' : p.anim; // idle, run, jump
+    final frameInfo = _frameSizes[animType] ?? _frameSizes['idle']!;
+    final assetPath = 'assets/levels/media/${animType}_cat$catNum.png';
+    final img = sprites.get(assetPath);
+    if (img == null) return;
+
+    final fw = frameInfo.w.toDouble();
+    final fh = frameInfo.h.toDouble();
+    final cols = (img.width / fw).floor();
+    if (cols <= 0) return;
+
+    // Frame animado basado en fps=12 y nuestro tick de 50ms
+    final totalFrames = frameInfo.frames;
+    final frame = (animTick ~/ 4) % totalFrames; // ~12fps con tick de 50ms
+
+    final srcCol = frame % cols;
+    final srcRow = frame ~/ cols;
+    final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
+
+    // Posición: el server envía coordenadas Y-down, anclar desde centro-abajo
+    final drawX = p.x - fw / 2;
+    final drawY = p.y - fh * 0.7; // anchorY ~0.7
+
+    // Flip horizontal si mira a la izquierda
+    canvas.save();
+    if (p.dir == 'LEFT') {
+      canvas.translate(drawX + fw, drawY);
+      canvas.scale(-1, 1);
+      canvas.drawImageRect(
+        img, src, Rect.fromLTWH(0, 0, fw, fh), Paint(),
+      );
+    } else {
+      canvas.drawImageRect(
+        img, src, Rect.fromLTWH(drawX, drawY, fw, fh), Paint(),
+      );
+    }
+    canvas.restore();
 
     // Nickname encima
-    final nameTp = TextPainter(
+    final tp = TextPainter(
       text: TextSpan(
-        text: '${p.nickname} (${p.anim})',
+        text: p.nickname,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 10,
+          fontSize: 8,
           fontWeight: FontWeight.bold,
           backgroundColor: Colors.black54,
         ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
-    nameTp.paint(canvas, Offset(px - nameTp.width / 2, py - 75));
+    tp.paint(canvas, Offset(p.x - tp.width / 2, drawY - 12));
+  }
+
+  int? _extractCatNumber(String cat) {
+    // "cat1" → 1, "cat2" → 2, etc.
+    if (cat.isEmpty) return null;
+    final match = RegExp(r'cat(\d+)').firstMatch(cat);
+    if (match != null) return int.tryParse(match.group(1)!);
+    return null;
   }
 
   void _drawUI(Canvas canvas, Size size) {
     final status = connected ? '🟢 Conectado' : '🔴 Desconectado';
     final playerCount = remotePlayers.where((p) => p.nickname != viewerNickname).length;
-    final playerNames = remotePlayers
-        .where((p) => p.nickname != viewerNickname)
-        .map((p) => '${p.nickname} (${p.x.toInt()},${p.y.toInt()}) ${p.anim}')
-        .join('\n  ');
 
-    final text = '$status | Viewer: ${viewerNickname ?? "..."}\n'
-        '👥 Jugadores activos: $playerCount\n'
-        '  $playerNames\n'
-        '📊 Zonas: ${zones.length} | Capas: ${layers.length} | Anims: ${animations.length}';
+    final text = '$status | Viewer: ${viewerNickname ?? "..."} | '
+        '👥 $playerCount jugadores';
 
     final tp = TextPainter(
       text: TextSpan(
         text: text,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.bold,
           backgroundColor: Colors.black54,
         ),
