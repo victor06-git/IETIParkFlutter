@@ -21,7 +21,7 @@
           "tileMapFile": "tilemaps/level_000_layer_000.json"
         },
         {
-          "name": "background",
+          "name": "bg",
           "gameplayData": "",
           "x": 0,
           "y": 0,
@@ -34,9 +34,9 @@
           "tileMapFile": "tilemaps/level_000_layer_001.json"
         },
         {
-          "name": "background2",
+          "name": "bg2",
           "gameplayData": "",
-          "x": -2,
+          "x": 0,
           "y": 0,
           "depth": 0.0,
           "tilesSheetFile": "media/BG_2_1.png",
@@ -47,9 +47,9 @@
           "tileMapFile": "tilemaps/level_000_layer_002.json"
         },
         {
-          "name": "background3",
+          "name": "bg3",
           "gameplayData": "",
-          "x": -2,
+          "x": 0,
           "y": 0,
           "depth": 0.0,
           "tilesSheetFile": "media/BG_3_1.png",
@@ -73,8 +73,8 @@
           "gameplayData": "",
           "type": "cat1",
           "animationId": "anim_1776548802946154",
-          "x": 43,
-          "y": 173,
+          "x": 47,
+          "y": 175,
           "width": 16,
           "height": 16,
           "imageFile": "media/idle_cat1.png",
@@ -88,26 +88,11 @@
           "gameplayData": "",
           "type": "cat2",
           "animationId": "anim_1776698066982895",
-          "x": 27,
-          "y": 174,
+          "x": 29,
+          "y": 175,
           "width": 16,
           "height": 16,
           "imageFile": "media/idle_cat2.png",
-          "flipX": false,
-          "flipY": false,
-          "depth": 0.0,
-          "groupId": "__main__"
-        },
-        {
-          "name": "cat3",
-          "gameplayData": "",
-          "type": "cat3",
-          "animationId": "anim_1776698286238299",
-          "x": 108,
-          "y": 172,
-          "width": 16,
-          "height": 16,
-          "imageFile": "media/idle_cat3.png",
           "flipX": false,
           "flipY": false,
           "depth": 0.0,
@@ -119,25 +104,10 @@
           "type": "cat4",
           "animationId": "anim_1776699801506388",
           "x": 12,
-          "y": 174,
+          "y": 175,
           "width": 16,
           "height": 16,
           "imageFile": "media/idle_cat4.png",
-          "flipX": false,
-          "flipY": false,
-          "depth": 0.0,
-          "groupId": "__main__"
-        },
-        {
-          "name": "cat5",
-          "gameplayData": "",
-          "type": "cat5",
-          "animationId": "anim_1776703599515731",
-          "x": 76,
-          "y": 173,
-          "width": 16,
-          "height": 16,
-          "imageFile": "media/idle_cat5.png",
           "flipX": false,
           "flipY": false,
           "depth": 0.0,
@@ -148,56 +118,11 @@
           "gameplayData": "",
           "type": "tree",
           "animationId": "anim_1776787880593434",
-          "x": 303,
-          "y": 151,
+          "x": 262,
+          "y": 153,
           "width": 128,
           "height": 128,
           "imageFile": "media/tree1.png",
-          "flipX": false,
-          "flipY": false,
-          "depth": 0.0,
-          "groupId": "__main__"
-        },
-        {
-          "name": "cat6",
-          "gameplayData": "",
-          "type": "cat6",
-          "animationId": "anim_1776703618810354",
-          "x": 60,
-          "y": 173,
-          "width": 16,
-          "height": 16,
-          "imageFile": "media/idle_cat6.png",
-          "flipX": false,
-          "flipY": false,
-          "depth": 0.0,
-          "groupId": "__main__"
-        },
-        {
-          "name": "cat7",
-          "gameplayData": "",
-          "type": "cat7",
-          "animationId": "anim_1776703644151016",
-          "x": 93,
-          "y": 172,
-          "width": 16,
-          "height": 16,
-          "imageFile": "media/idle_cat7.png",
-          "flipX": false,
-          "flipY": false,
-          "depth": 0.0,
-          "groupId": "__main__"
-        },
-        {
-          "name": "cat8",
-          "gameplayData": "",
-          "type": "cat8",
-          "animationId": "anim_1776703663180788",
-          "x": 124,
-          "y": 172,
-          "width": 16,
-          "height": 16,
-          "imageFile": "media/idle_cat8.png",
           "flipX": false,
           "flipY": false,
           "depth": 0.0,
@@ -208,8 +133,8 @@
           "gameplayData": "",
           "type": "potion",
           "animationId": "anim_1776788964726637",
-          "x": 184,
-          "y": 118,
+          "x": 157,
+          "y": 160,
           "width": 32,
           "height": 32,
           "imageFile": "media/Icon1.png",
@@ -649,12 +574,12 @@
     {
       "id": "__main__",
       "name": "Main",
-      "collapsed": false
+      "collapsed": true
     },
     {
       "id": "__group_1776697689770522_0",
       "name": "cats",
-      "collapsed": true
+      "collapsed": false
     },
     {
       "id": "__group_1776700017245398_0",
@@ -664,7 +589,7 @@
     {
       "id": "__group_1776782473910706_0",
       "name": "Potions",
-      "collapsed": true
+      "collapsed": false
     }
   ],
   "zoneTypes": [
