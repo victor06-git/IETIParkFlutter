@@ -10,8 +10,8 @@
         {
           "name": "level",
           "gameplayData": "",
-          "x": -705,
-          "y": -213,
+          "x": 0,
+          "y": 0,
           "depth": 0.0,
           "tilesSheetFile": "media/Terrain_and_Props.png",
           "tilesWidth": 16,
@@ -36,7 +36,7 @@
         {
           "name": "background2",
           "gameplayData": "",
-          "x": 0,
+          "x": -2,
           "y": 0,
           "depth": 0.0,
           "tilesSheetFile": "media/BG_2_1.png",
@@ -49,7 +49,7 @@
         {
           "name": "background3",
           "gameplayData": "",
-          "x": 0,
+          "x": -2,
           "y": 0,
           "depth": 0.0,
           "tilesSheetFile": "media/BG_3_1.png",
