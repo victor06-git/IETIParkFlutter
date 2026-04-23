@@ -26,22 +26,6 @@ class RemotePlayer {
   });
 }
 
-/// Estado de una puerta gestionada por el server.
-class DoorState {
-  final int index;
-  final double x, y, w, h;
-  bool open;
-
-  DoorState({
-    required this.index,
-    required this.x,
-    required this.y,
-    required this.w,
-    required this.h,
-    this.open = false,
-  });
-}
-
 class WebSocketService extends ChangeNotifier {
   WebSocketChannel? _channel;
   bool _connected = false;
@@ -50,7 +34,6 @@ class WebSocketService extends ChangeNotifier {
 
   final String serverUrl;
   final Map<String, RemotePlayer> remotePlayers = {};
-  final List<DoorState> doors = [];
 
   bool get connected => _connected;
   String? get confirmedNickname => _confirmedNickname;
@@ -152,21 +135,6 @@ class WebSocketService extends ChangeNotifier {
           notifyListeners();
           break;
 
-        case 'DOOR_STATE':
-          final doorsList = msg['doors'] as List<dynamic>? ?? [];
-          doors.clear();
-          for (final d in doorsList) {
-            doors.add(DoorState(
-              index: d['index'] as int? ?? 0,
-              x: (d['x'] ?? 0).toDouble(),
-              y: (d['y'] ?? 0).toDouble(),
-              w: (d['w'] ?? 0).toDouble(),
-              h: (d['h'] ?? 0).toDouble(),
-              open: d['open'] as bool? ?? false,
-            ));
-          }
-          notifyListeners();
-          break;
       }
     } catch (e) {
       debugPrint('[WS] Error parseando mensaje: $e');

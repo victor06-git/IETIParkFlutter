@@ -86,25 +86,33 @@ class AnimationData {
   final int startFrame, endFrame;
   final double fps, anchorX, anchorY;
   final bool loop;
+  final int frameWidth, frameHeight;
 
   AnimationData({
     required this.id, required this.name, required this.mediaFile,
     required this.startFrame, required this.endFrame,
     required this.fps, required this.loop,
     required this.anchorX, required this.anchorY,
+    required this.frameWidth, required this.frameHeight,
   });
 
-  factory AnimationData.fromJson(Map<String, dynamic> json) => AnimationData(
-    id: json['id'] ?? '',
-    name: json['name'] ?? '',
-    mediaFile: json['mediaFile'] ?? '',
-    startFrame: json['startFrame'] ?? 0,
-    endFrame: json['endFrame'] ?? 0,
-    fps: (json['fps'] ?? 12.0).toDouble(),
-    loop: json['loop'] ?? true,
-    anchorX: (json['anchorX'] ?? 0.5).toDouble(),
-    anchorY: (json['anchorY'] ?? 0.5).toDouble(),
-  );
+  factory AnimationData.fromJson(Map<String, dynamic> json, Map<String, (int, int)> mediaSizes) {
+    final mediaFile = json['mediaFile'] as String? ?? '';
+    final size = mediaSizes[mediaFile];
+    return AnimationData(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      mediaFile: mediaFile,
+      startFrame: json['startFrame'] ?? 0,
+      endFrame: json['endFrame'] ?? 0,
+      fps: (json['fps'] ?? 12.0).toDouble(),
+      loop: json['loop'] ?? true,
+      anchorX: (json['anchorX'] ?? 0.5).toDouble(),
+      anchorY: (json['anchorY'] ?? 0.5).toDouble(),
+      frameWidth: size?.$1 ?? 0,
+      frameHeight: size?.$2 ?? 0,
+    );
+  }
 }
 
 class LevelData {
@@ -124,13 +132,10 @@ class LevelData {
   });
 
   static Future<LevelData> loadFromAssets() async {
-    // Cargar game_data.json
     final gameDataStr = await rootBundle.loadString('assets/levels/game_data.json');
     final gameData = jsonDecode(gameDataStr);
     final level = (gameData['levels'] as List).first;
 
-    final viewportX = (level['viewportX'] ?? 0).toDouble();
-    final viewportY = (level['viewportY'] ?? 0).toDouble();
     final viewportW = (level['viewportWidth'] ?? 320).toDouble();
     final viewportH = (level['viewportHeight'] ?? 180).toDouble();
 
@@ -175,31 +180,54 @@ class LevelData {
         .map((s) => SpriteData.fromJson(s as Map<String, dynamic>))
         .toList();
 
-    // Cargar animaciones
+    // Cargar animaciones indexadas por id Y por nombre
     final animations = <String, AnimationData>{};
     try {
       final animStr = await rootBundle.loadString('assets/levels/animations/animations.json');
       final animJson = jsonDecode(animStr);
+
+      // Construir mapa mediaFile → (tileWidth, tileHeight) desde mediaAssets
+      final mediaSizes = <String, (int, int)>{};
+      for (final a in (gameData['mediaAssets'] as List? ?? [])) {
+        final fileName = a['fileName'] as String? ?? '';
+        final tw = a['tileWidth'] as int? ?? 0;
+        final th = a['tileHeight'] as int? ?? 0;
+        if (fileName.isNotEmpty && tw > 0 && th > 0) {
+          mediaSizes[fileName] = (tw, th);
+        }
+      }
+
       for (final a in (animJson['animations'] as List? ?? [])) {
-        final ad = AnimationData.fromJson(a);
+        final ad = AnimationData.fromJson(a, mediaSizes);
+        animations[ad.id] = ad;
         animations[ad.name] = ad;
       }
     } catch (e) {
       debugPrint('Error cargando animaciones: $e');
     }
 
-    // World size = viewport del editor (las zonas pueden estar fuera del área visual)
-    const bgNames = {'bg', 'bg2', 'bg3'};
-    double ww = viewportX + viewportW;
-    double wh = viewportY + viewportH;
+    // worldWidth/worldHeight: igual que LevelLoader.java de Android
+    double ww = viewportW;
+    double wh = viewportH;
     for (final l in layers) {
-      if (bgNames.contains(l.name)) continue;
-      final cols = l.tiles.isEmpty ? 0 : l.tiles.map((r) => r.length).reduce((a, b) => a > b ? a : b);
-      ww = [ww, l.x + cols * l.tileWidth].reduce((a, b) => a > b ? a : b);
-      wh = [wh, l.y + l.tiles.length * l.tileHeight].reduce((a, b) => a > b ? a : b);
+      if (l.tiles.isEmpty) continue;
+      final layerRight = l.x + l.tiles[0].length * l.tileWidth;
+      final layerBottom = l.y + l.tiles.length * l.tileHeight;
+      if (layerRight > ww) ww = layerRight;
+      if (layerBottom > wh) wh = layerBottom;
     }
-
-    debugPrint(' ${zones.length} zonas, ${layers.length} capas, ${animations.length} anims, world: ${ww}x$wh');
+    for (final s in sprites) {
+      final anim = animations[s.animationId];
+      final fw = (anim != null && anim.frameWidth > 0) ? anim.frameWidth.toDouble() : s.width;
+      final fh = (anim != null && anim.frameHeight > 0) ? anim.frameHeight.toDouble() : s.height;
+      final anchorX = anim?.anchorX ?? 0.5;
+      final anchorY = anim?.anchorY ?? 0.5;
+      final bottom = s.y - fh * anchorY + fh;
+      final right  = s.x - fw * anchorX + fw;
+      if (right  > ww) ww = right;
+      if (bottom > wh) wh = bottom;
+    }
+    debugPrint('world final: ${ww}x$wh');
 
     return LevelData(
       zones: zones, layers: layers, sprites: sprites, animations: animations,
