@@ -188,7 +188,7 @@ class LevelData {
       debugPrint('Error cargando animaciones: $e');
     }
 
-    // Calcular world size — excluir capas BG (imagen única, no tilemap real)
+    // World size = viewport del editor (las zonas pueden estar fuera del área visual)
     const bgNames = {'bg', 'bg2', 'bg3'};
     double ww = viewportX + viewportW;
     double wh = viewportY + viewportH;
@@ -197,10 +197,6 @@ class LevelData {
       final cols = l.tiles.isEmpty ? 0 : l.tiles.map((r) => r.length).reduce((a, b) => a > b ? a : b);
       ww = [ww, l.x + cols * l.tileWidth].reduce((a, b) => a > b ? a : b);
       wh = [wh, l.y + l.tiles.length * l.tileHeight].reduce((a, b) => a > b ? a : b);
-    }
-    for (final z in zones) {
-      ww = [ww, z.x + z.width].reduce((a, b) => a > b ? a : b);
-      wh = [wh, z.y + z.height].reduce((a, b) => a > b ? a : b);
     }
 
     debugPrint(' ${zones.length} zonas, ${layers.length} capas, ${animations.length} anims, world: ${ww}x$wh');

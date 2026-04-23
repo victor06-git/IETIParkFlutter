@@ -37,9 +37,6 @@ class _GameWidgetState extends State<GameWidget> {
 
     _ws = WebSocketService(serverUrl: 'wss://pico2.ieti.site');
     _ws.connect();
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _ws.sendJoin('flutter_viewer');
-    });
     _ws.addListener(_onWsUpdate);
 
     _renderTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
@@ -122,7 +119,6 @@ class _GameWidgetState extends State<GameWidget> {
       sprites: _sprites,
       remotePlayers: players,
       connected: _ws.connected,
-      viewerNickname: _ws.confirmedNickname,
       animTick: _animTick,
       doors: _ws.doors,
     );
@@ -180,17 +176,20 @@ class GamePainter extends CustomPainter {
   final SpriteLoader sprites;
   final List<RemotePlayer> remotePlayers;
   final bool connected;
-  final String? viewerNickname;
   final int animTick;
   final List<DoorState> doors;
 
   // FUENTE: game_data.json → mediaAssets donde name=="idle_catN","run_catN","jump_catN"
-  // tileWidth / tileHeight de cada spritesheet
+  // tileWidth / tileHeight de cada spritesheet (píxeles del frame fuente)
   static const _frameSizes = {
     'idle': (w: 16, h: 16, frames: 7),
     'run': (w: 20, h: 20, frames: 7),
     'jump': (w: 20, h: 24, frames: 11),
   };
+
+  // Tamaño de display en unidades del mundo lógico (320x180).
+  // Los tiles son 16x16, un gato ocupa ~2 tiles de alto → 32 unidades.
+  static const _catDisplaySize = (w: 32.0, h: 32.0);
 
   // Nombres exactos de las capas de fondo tal como aparecen en game_data.json
   // levels[0].layers[*].name
@@ -204,7 +203,6 @@ class GamePainter extends CustomPainter {
     required this.sprites,
     required this.remotePlayers,
     required this.connected,
-    this.viewerNickname,
     required this.animTick,
     required this.doors,
   });
@@ -245,10 +243,8 @@ class GamePainter extends CustomPainter {
     _drawDoors(canvas);
 
     // ── 5. JUGADORES REMOTOS ──────────────────────────────────────────────────
-    // FUENTE: WebSocket → mensajes "MOVE" y "PLAYER_LIST"
-    //         campos: nickname, cat ("cat1"…"cat8"), x, y, anim, frame, dir
     for (final p in remotePlayers) {
-      if (p.nickname == viewerNickname) continue;
+      if (!p.hasPosition) continue;
       _drawCatPlayer(canvas, p);
     }
 
@@ -301,7 +297,7 @@ class GamePainter extends CustomPainter {
   // ───────────────────────────────────────────────────────────────────────────
   void _drawTileLayers(Canvas canvas) {
     for (final layer in levelData.layers) {
-      // ✅ CORRECCIÓN: excluir fondos por su nombre real ("bg","bg2","bg3")
+      // CORRECCIÓN: excluir fondos por su nombre real ("bg","bg2","bg3")
       // antes se usaba startsWith('background') que nunca coincidía
       if (_bgLayerNames.contains(layer.name) || !layer.visible) continue;
 
@@ -358,6 +354,8 @@ class GamePainter extends CustomPainter {
     // El canvas ya está escalado (canvas.scale en paint()), así que 1 unidad
     // lógica aquí = 1 px del viewport del editor (320x180). Todo queda alineado.
     for (final sprite in levelData.sprites) {
+      // Saltar sprites de gatos (cat1..cat8) — son jugadores, no decoración
+      if (sprite.name.startsWith('cat')) continue;
       if (sprite.imageFile.isEmpty) continue;
       final path = 'assets/levels/${sprite.imageFile}';
       final img = sprites.get(path);
@@ -479,7 +477,7 @@ class GamePainter extends CustomPainter {
     final img = sprites.get(assetPath);
     if (img == null) return;
 
-    final fw = frameInfo.w.toDouble();
+    final fw = frameInfo.w.toDouble(); // tamaño del frame en el spritesheet
     final fh = frameInfo.h.toDouble();
     final cols = (img.width / fw).floor();
     if (cols <= 0) return;
@@ -490,29 +488,25 @@ class GamePainter extends CustomPainter {
     final srcRow = frame ~/ cols;
     final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
 
-    // p.x, p.y vienen del WebSocket (coordenadas del servidor, Y hacia abajo)
-    // Anclamos el sprite desde centro-abajo (anchorY ~0.7)
-    final drawX = p.x - fw / 2;
-    final drawY = p.y - fh * 0.7;
+    // Tamaño de destino en unidades del mundo lógico (escala con el canvas)
+    final dw = _catDisplaySize.w;
+    final dh = _catDisplaySize.h;
+
+    // Anclamos el sprite desde centro-abajo
+    final drawX = p.x - dw / 2;
+    final drawY = p.y - dh;
 
     canvas.save();
     if (p.dir == 'LEFT') {
-      // Flip horizontal: transladar al origen del sprite, escalar -1 en X
-      canvas.translate(drawX + fw, drawY);
+      canvas.translate(drawX + dw, drawY);
       canvas.scale(-1, 1);
-      canvas.drawImageRect(img, src, Rect.fromLTWH(0, 0, fw, fh), Paint());
+      canvas.drawImageRect(img, src, Rect.fromLTWH(0, 0, dw, dh), Paint());
     } else {
-      canvas.drawImageRect(
-        img,
-        src,
-        Rect.fromLTWH(drawX, drawY, fw, fh),
-        Paint(),
-      );
+      canvas.drawImageRect(img, src, Rect.fromLTWH(drawX, drawY, dw, dh), Paint());
     }
     canvas.restore();
 
     // Nickname encima del gato
-    // FUENTE: WebSocket → RemotePlayer.nickname
     final tp = TextPainter(
       text: TextSpan(
         text: p.nickname,
@@ -540,11 +534,8 @@ class GamePainter extends CustomPainter {
   // ───────────────────────────────────────────────────────────────────────────
   void _drawUI(Canvas canvas, Size size) {
     final status = connected ? 'Conectado' : 'Desconectado';
-    final playerCount = remotePlayers
-        .where((p) => p.nickname != viewerNickname)
-        .length;
-    final text =
-        '$status | Viewer: ${viewerNickname ?? "..."} | $playerCount jugadores';
+    final playerCount = remotePlayers.length;
+    final text = '$status | $playerCount jugadores';
 
     final tp = TextPainter(
       text: TextSpan(

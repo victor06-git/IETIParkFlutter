@@ -12,6 +12,7 @@ class RemotePlayer {
   String anim;
   int frame;
   String dir;
+  bool hasPosition;
 
   RemotePlayer({
     required this.nickname,
@@ -21,6 +22,7 @@ class RemotePlayer {
     this.anim = 'idle',
     this.frame = 0,
     this.dir = 'RIGHT',
+    this.hasPosition = false,
   });
 }
 
@@ -105,10 +107,9 @@ class WebSocketService extends ChangeNotifier {
       switch (type) {
         case 'WELCOME':
           debugPrint('[WS] WELCOME recibido');
-          // Si ya teníamos nickname, re-join automático
-          if (_confirmedNickname != null) {
-            sendJoin(_confirmedNickname!);
-          }
+          // El viewer no hace JOIN, solo escucha los broadcasts
+          // Pedir lista de jugadores actual
+          sendGetPlayers();
           break;
 
         case 'JOIN_OK':
@@ -147,6 +148,7 @@ class WebSocketService extends ChangeNotifier {
           player.frame = msg['frame'] as int? ?? player.frame;
           player.dir = msg['dir'] as String? ?? player.dir;
           player.cat = msg['cat'] as String? ?? player.cat;
+          player.hasPosition = true;
           notifyListeners();
           break;
 
