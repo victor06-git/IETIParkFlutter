@@ -101,6 +101,8 @@ class _GameWidgetState extends State<GameWidget> {
                 connected: _ws.connected,
                 animTick: _animTick,
                 scale: scale,
+                potionTaken: _ws.potionTaken,
+                doorOpen: _ws.doorOpen,
               ),
               size: Size(w, h),
             ),
@@ -118,6 +120,8 @@ class GamePainter extends CustomPainter {
   final bool connected;
   final int animTick;
   final double scale;
+  final bool potionTaken;
+  final bool doorOpen;
 
   static const _bgOrder = ['bg3', 'bg2', 'bg'];
   static const _bgNames = {'bg', 'bg2', 'bg3'};
@@ -135,6 +139,8 @@ class GamePainter extends CustomPainter {
     required this.connected,
     required this.animTick,
     required this.scale,
+    required this.potionTaken,
+    required this.doorOpen,
   });
 
   @override
@@ -212,6 +218,8 @@ class GamePainter extends CustomPainter {
   void _drawSprites(Canvas canvas) {
     for (final sprite in levelData.sprites) {
       if (sprite.name.startsWith('cat')) continue;
+      if (sprite.name == 'potion' && potionTaken) continue;
+      if (sprite.name == 'tree' && doorOpen) continue;
       if (sprite.imageFile.isEmpty) continue;
       final img = sprites.get('assets/levels/${sprite.imageFile}');
       if (img == null) continue;
@@ -235,7 +243,9 @@ class GamePainter extends CustomPainter {
           ? startFrame + (animTick ~/ 3) % totalFrames
           : startFrame;
 
-      final src = Rect.fromLTWH((frame % cols) * fw, 0, fw, fh);
+      final srcRow = frame ~/ cols;
+      final srcCol = frame % cols;
+      final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
       final drawX = sprite.x - fw * anchorX;
       final drawY = sprite.y - fh * anchorY;
       canvas.drawImageRect(img, src, Rect.fromLTWH(drawX, drawY, fw, fh), Paint());
@@ -264,8 +274,8 @@ class GamePainter extends CustomPainter {
     final anim = levelData.animations['${animType}_cat$catNum'];
     final anchorX = anim?.anchorX ?? 0.5;
     final anchorY = anim?.anchorY ?? 0.75;
-    const dw = 32.0;
-    const dh = 32.0;
+    final dw = fw;
+    final dh = fh;
     final drawX = p.x - dw * anchorX;
     final drawY = p.y - dh * anchorY;
 
@@ -283,13 +293,13 @@ class GamePainter extends CustomPainter {
       text: TextSpan(
         text: p.nickname,
         style: const TextStyle(
-          color: Colors.white, fontSize: 8,
+          color: Colors.white, fontSize: 6,
           fontWeight: FontWeight.bold, backgroundColor: Colors.black54,
         ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
-    tp.paint(canvas, Offset(p.x - tp.width / 2, drawY - 10));
+    tp.paint(canvas, Offset(p.x - tp.width / 2, drawY - 6));
   }
 
   // ── UI ────────────────────────────────────────────────────────────────────

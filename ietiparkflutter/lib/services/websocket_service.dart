@@ -34,6 +34,8 @@ class WebSocketService extends ChangeNotifier {
 
   final String serverUrl;
   final Map<String, RemotePlayer> remotePlayers = {};
+  bool potionTaken = false;
+  bool doorOpen = false;
 
   bool get connected => _connected;
   String? get confirmedNickname => _confirmedNickname;
@@ -134,6 +136,11 @@ class WebSocketService extends ChangeNotifier {
             player.hasPosition = true;
           }
           remotePlayers.removeWhere((k, _) => !activeNicks.contains(k));
+          final world = msg['world'] as Map<String, dynamic>?;
+          if (world != null) {
+            potionTaken = world['potionTaken'] == true;
+            doorOpen = world['doorOpen'] == true;
+          }
           notifyListeners();
           break;
 
