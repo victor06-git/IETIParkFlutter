@@ -107,7 +107,7 @@ class WebSocketService extends ChangeNotifier {
           final currentNicks = <String>{};
           for (final p in players) {
             final nick = p['nickname'] as String? ?? '';
-            final cat = p['cat'] as String? ?? '';
+            final cat = 'cat${p['cat'] ?? ''}';
             if (nick.isEmpty) continue;
             currentNicks.add(nick);
             remotePlayers.putIfAbsent(nick, () => RemotePlayer(nickname: nick));
@@ -115,6 +115,25 @@ class WebSocketService extends ChangeNotifier {
           }
           // Eliminar jugadores que ya no están
           remotePlayers.removeWhere((k, _) => !currentNicks.contains(k));
+          notifyListeners();
+          break;
+
+        case 'STATE':
+          final statePlayers = msg['players'] as List<dynamic>? ?? [];
+          final activeNicks = <String>{};
+          for (final p in statePlayers) {
+            final nick = p['nickname'] as String? ?? '';
+            if (nick.isEmpty) continue;
+            activeNicks.add(nick);
+            final player = remotePlayers.putIfAbsent(nick, () => RemotePlayer(nickname: nick));
+            player.x = (p['x'] ?? 0).toDouble();
+            player.y = (p['y'] ?? 0).toDouble();
+            player.anim = p['anim'] as String? ?? player.anim;
+            player.dir = (p['facingRight'] == true) ? 'RIGHT' : 'LEFT';
+            player.cat = 'cat${p['cat'] ?? ''}';
+            player.hasPosition = true;
+          }
+          remotePlayers.removeWhere((k, _) => !activeNicks.contains(k));
           notifyListeners();
           break;
 
