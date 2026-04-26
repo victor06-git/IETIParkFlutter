@@ -12,6 +12,7 @@ class RemotePlayer {
   String anim;
   int frame;
   String dir;
+  bool hasPosition;
 
   RemotePlayer({
     required this.nickname,
@@ -21,22 +22,7 @@ class RemotePlayer {
     this.anim = 'idle',
     this.frame = 0,
     this.dir = 'RIGHT',
-  });
-}
-
-/// Estado de una puerta gestionada por el server.
-class DoorState {
-  final int index;
-  final double x, y, w, h;
-  bool open;
-
-  DoorState({
-    required this.index,
-    required this.x,
-    required this.y,
-    required this.w,
-    required this.h,
-    this.open = false,
+    this.hasPosition = false,
   });
 }
 
@@ -48,7 +34,8 @@ class WebSocketService extends ChangeNotifier {
 
   final String serverUrl;
   final Map<String, RemotePlayer> remotePlayers = {};
-  final List<DoorState> doors = [];
+  bool potionTaken = false;
+  bool doorOpen = false;
 
   bool get connected => _connected;
   String? get confirmedNickname => _confirmedNickname;
@@ -105,10 +92,9 @@ class WebSocketService extends ChangeNotifier {
       switch (type) {
         case 'WELCOME':
           debugPrint('[WS] WELCOME recibido');
-          // Si ya teníamos nickname, re-join automático
-          if (_confirmedNickname != null) {
-            sendJoin(_confirmedNickname!);
-          }
+          // El viewer no hace JOIN, solo escucha los broadcasts
+          // Pedir lista de jugadores actual
+          sendGetPlayers();
           break;
 
         case 'JOIN_OK':
@@ -123,7 +109,7 @@ class WebSocketService extends ChangeNotifier {
           final currentNicks = <String>{};
           for (final p in players) {
             final nick = p['nickname'] as String? ?? '';
-            final cat = p['cat'] as String? ?? '';
+            final cat = 'cat${p['cat'] ?? ''}';
             if (nick.isEmpty) continue;
             currentNicks.add(nick);
             remotePlayers.putIfAbsent(nick, () => RemotePlayer(nickname: nick));
@@ -131,6 +117,30 @@ class WebSocketService extends ChangeNotifier {
           }
           // Eliminar jugadores que ya no están
           remotePlayers.removeWhere((k, _) => !currentNicks.contains(k));
+          notifyListeners();
+          break;
+
+        case 'STATE':
+          final statePlayers = msg['players'] as List<dynamic>? ?? [];
+          final activeNicks = <String>{};
+          for (final p in statePlayers) {
+            final nick = p['nickname'] as String? ?? '';
+            if (nick.isEmpty) continue;
+            activeNicks.add(nick);
+            final player = remotePlayers.putIfAbsent(nick, () => RemotePlayer(nickname: nick));
+            player.x = (p['x'] ?? 0).toDouble();
+            player.y = (p['y'] ?? 0).toDouble();
+            player.anim = p['anim'] as String? ?? player.anim;
+            player.dir = (p['facingRight'] == true) ? 'RIGHT' : 'LEFT';
+            player.cat = 'cat${p['cat'] ?? ''}';
+            player.hasPosition = true;
+          }
+          remotePlayers.removeWhere((k, _) => !activeNicks.contains(k));
+          final world = msg['world'] as Map<String, dynamic>?;
+          if (world != null) {
+            potionTaken = world['potionTaken'] == true;
+            doorOpen = world['doorOpen'] == true;
+          }
           notifyListeners();
           break;
 
@@ -147,24 +157,10 @@ class WebSocketService extends ChangeNotifier {
           player.frame = msg['frame'] as int? ?? player.frame;
           player.dir = msg['dir'] as String? ?? player.dir;
           player.cat = msg['cat'] as String? ?? player.cat;
+          player.hasPosition = true;
           notifyListeners();
           break;
 
-        case 'DOOR_STATE':
-          final doorsList = msg['doors'] as List<dynamic>? ?? [];
-          doors.clear();
-          for (final d in doorsList) {
-            doors.add(DoorState(
-              index: d['index'] as int? ?? 0,
-              x: (d['x'] ?? 0).toDouble(),
-              y: (d['y'] ?? 0).toDouble(),
-              w: (d['w'] ?? 0).toDouble(),
-              h: (d['h'] ?? 0).toDouble(),
-              open: d['open'] as bool? ?? false,
-            ));
-          }
-          notifyListeners();
-          break;
       }
     } catch (e) {
       debugPrint('[WS] Error parseando mensaje: $e');

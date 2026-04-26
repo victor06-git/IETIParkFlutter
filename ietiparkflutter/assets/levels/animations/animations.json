@@ -3897,17 +3897,37 @@
       "fps": 12.0,
       "loop": true,
       "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
+      "anchorX": 0.4937651959382151,
+      "anchorY": 0.7595078899694889,
       "anchorColor": "red",
-      "hitBoxes": [],
+      "hitBoxes": [
+        {
+          "id": "__hb_1776801125666361_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.0078125,
+          "y": 0.171875,
+          "width": 0.953125,
+          "height": 0.8203125
+        }
+      ],
       "frameRigs": [
         {
           "frame": 4,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
+          "anchorX": 0.4937651959382151,
+          "anchorY": 0.7595078899694889,
           "anchorColor": "red",
-          "hitBoxes": []
+          "hitBoxes": [
+            {
+              "id": "__hb_1776801125666361_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.0078125,
+              "y": 0.171875,
+              "width": 0.953125,
+              "height": 0.8203125
+            }
+          ]
         }
       ]
     },
