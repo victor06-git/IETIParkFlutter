@@ -734,7 +734,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 134,
@@ -745,7 +745,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 181,
@@ -756,7 +756,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 177,
@@ -767,7 +767,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 172,
@@ -778,7 +778,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 167,
@@ -789,7 +789,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 160,
@@ -800,7 +800,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 156,
@@ -811,7 +811,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 137,
@@ -822,7 +822,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 143,
@@ -833,7 +833,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 152,
@@ -844,7 +844,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 147,
@@ -855,7 +855,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "arbre",
+      "name": "tree",
       "type": "arbre",
       "gameplayData": "",
       "x": 241,
