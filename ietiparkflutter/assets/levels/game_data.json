@@ -114,30 +114,30 @@
           "groupId": "__main__"
         },
         {
-          "name": "tree",
+          "name": "potion",
           "gameplayData": "",
-          "type": "tree",
-          "animationId": "anim_1776787880593434",
-          "x": 282,
-          "y": 149,
-          "width": 128,
-          "height": 128,
-          "imageFile": "media/tree1.png",
+          "type": "potion",
+          "animationId": "anim_1777384492009725",
+          "x": 181,
+          "y": 118,
+          "width": 45,
+          "height": 45,
+          "imageFile": "media/Icon1(2)(2).png",
           "flipX": false,
           "flipY": false,
           "depth": 0.0,
           "groupId": "__main__"
         },
         {
-          "name": "potion",
+          "name": "dead_tree",
           "gameplayData": "",
-          "type": "potion",
-          "animationId": "anim_1776788964726637",
-          "x": 182,
-          "y": 111,
-          "width": 32,
-          "height": 32,
-          "imageFile": "media/Icon1.png",
+          "type": "dead_tree",
+          "animationId": "anim_1777384693370852",
+          "x": 285,
+          "y": 148,
+          "width": 100,
+          "height": 100,
+          "imageFile": "media/tree_die(1).png",
           "flipX": false,
           "flipY": false,
           "depth": 0.0,
@@ -532,6 +532,33 @@
       "tileHeight": 180,
       "selectionColorHex": "#FFCC00",
       "groupId": "__main__"
+    },
+    {
+      "name": "potion",
+      "fileName": "media/Icon1(2)(2).png",
+      "mediaType": "spritesheet",
+      "tileWidth": 45,
+      "tileHeight": 45,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__main__"
+    },
+    {
+      "name": "tree_died",
+      "fileName": "media/tree_die(1).png",
+      "mediaType": "spritesheet",
+      "tileWidth": 100,
+      "tileHeight": 100,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__main__"
+    },
+    {
+      "name": "tree_alive",
+      "fileName": "media/tree_alive(1).png",
+      "mediaType": "spritesheet",
+      "tileWidth": 100,
+      "tileHeight": 100,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__main__"
     }
   ],
   "mediaGroups": [
@@ -543,12 +570,12 @@
     {
       "id": "__group_1776697689770522_0",
       "name": "cats",
-      "collapsed": false
+      "collapsed": true
     },
     {
       "id": "__group_1776700017245398_0",
       "name": "map",
-      "collapsed": false
+      "collapsed": true
     },
     {
       "id": "__group_1776782473910706_0",
