@@ -33,8 +33,8 @@
       "name": "floor",
       "type": "floor",
       "gameplayData": "",
-      "x": -142,
-      "y": 164,
+      "x": -127,
+      "y": 176,
       "width": 600,
       "height": 30,
       "color": "blue",
@@ -734,29 +734,18 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 157,
-      "y": 139,
+      "x": 134,
+      "y": 173,
       "width": 50,
       "height": 50,
       "color": "yellow",
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
-      "type": "Category 3",
-      "gameplayData": "",
-      "x": 136,
-      "y": 158,
-      "width": 50,
-      "height": 50,
-      "color": "yellow",
-      "groupId": "__main__"
-    },
-    {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 181,
@@ -767,7 +756,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 177,
@@ -778,7 +767,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 172,
@@ -789,7 +778,7 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
       "x": 167,
@@ -800,69 +789,80 @@
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 163,
-      "y": 149,
+      "x": 160,
+      "y": 152,
       "width": 50,
       "height": 50,
       "color": "yellow",
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 161,
-      "y": 144,
+      "x": 156,
+      "y": 152,
       "width": 50,
       "height": 50,
       "color": "yellow",
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 146,
-      "y": 154,
+      "x": 137,
+      "y": 169,
       "width": 50,
       "height": 50,
       "color": "yellow",
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 150,
-      "y": 151,
+      "x": 143,
+      "y": 164,
       "width": 50,
       "height": 50,
       "color": "yellow",
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 153,
-      "y": 148,
+      "x": 152,
+      "y": 157,
       "width": 50,
       "height": 50,
       "color": "yellow",
       "groupId": "__main__"
     },
     {
-      "name": "Zone 67",
+      "name": "rampa",
       "type": "Category 3",
       "gameplayData": "",
-      "x": 155,
-      "y": 145,
+      "x": 147,
+      "y": 161,
       "width": 50,
       "height": 50,
       "color": "yellow",
+      "groupId": "__main__"
+    },
+    {
+      "name": "tree",
+      "type": "arbre",
+      "gameplayData": "",
+      "x": 241,
+      "y": 90,
+      "width": 90,
+      "height": 90,
+      "color": "purple",
       "groupId": "__main__"
     }
   ]

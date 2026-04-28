@@ -57,6 +57,10 @@ class _GameWidgetState extends State<GameWidget> {
     paths.add('assets/levels/media/shop_anim.png');
     paths.add('assets/levels/media/tree1.png');
     paths.add('assets/levels/media/Icon1.png');
+    // Árbol muerto/vivo y poción del nivel
+    paths.add('assets/levels/media/tree_die(1).png');
+    paths.add('assets/levels/media/tree_alive(1).png');
+    paths.add('assets/levels/media/Icon1(2)(2).png');
     await _sprites.loadAll(paths.toList());
   }
 
@@ -218,8 +222,9 @@ class GamePainter extends CustomPainter {
   void _drawSprites(Canvas canvas) {
     for (final sprite in levelData.sprites) {
       if (sprite.name.startsWith('cat')) continue;
-      if (sprite.name == 'potion' && potionTaken) continue;
-      if (sprite.name == 'tree' && doorOpen) continue;
+      // Ocultar poción si fue recogida; ocultar árbol muerto si ya está abierto
+      if (sprite.type == 'potion' && potionTaken) continue;
+      if (sprite.type == 'dead_tree' && doorOpen) continue;
       if (sprite.imageFile.isEmpty) continue;
       final img = sprites.get('assets/levels/${sprite.imageFile}');
       if (img == null) continue;
@@ -236,12 +241,9 @@ class GamePainter extends CustomPainter {
 
       final cols = (img.width / fw).floor().clamp(1, 9999);
       final startFrame = anim?.startFrame ?? 0;
-      final endFrame   = anim?.endFrame   ?? 0;
+      final endFrame   = anim?.endFrame   ?? startFrame;
       final totalFrames = (endFrame - startFrame + 1).clamp(1, 9999);
-      final isAnim = sprite.imageFile.contains('shop_anim');
-      final frame  = isAnim
-          ? startFrame + (animTick ~/ 3) % totalFrames
-          : startFrame;
+      final frame = startFrame + (animTick ~/ 3) % totalFrames;
 
       final srcRow = frame ~/ cols;
       final srcCol = frame % cols;

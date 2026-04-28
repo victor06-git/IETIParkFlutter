@@ -42,12 +42,13 @@ class Zone {
 /// Sprite estático del nivel (game_data.json → levels[0].sprites[])
 class SpriteData {
   final String name;
+  final String type;
   final String imageFile;
   final double x, y, width, height;
   final String animationId;
 
   SpriteData({
-    required this.name, required this.imageFile,
+    required this.name, required this.type, required this.imageFile,
     required this.x, required this.y,
     required this.width, required this.height,
     required this.animationId,
@@ -55,6 +56,7 @@ class SpriteData {
 
   factory SpriteData.fromJson(Map<String, dynamic> json) => SpriteData(
     name: json['name'] ?? '',
+    type: json['type'] ?? '',
     imageFile: json['imageFile'] ?? '',
     x: (json['x'] ?? 0).toDouble(),
     y: (json['y'] ?? 0).toDouble(),
