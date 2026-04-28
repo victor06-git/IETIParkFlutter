@@ -106,7 +106,11 @@ class _GameWidgetState extends State<GameWidget> {
                 animTick: _animTick,
                 scale: scale,
                 potionTaken: _ws.potionTaken,
+                potionConsumed: _ws.potionConsumed,
+                potionX: _ws.potionX,
+                potionY: _ws.potionY,
                 doorOpen: _ws.doorOpen,
+                treeOpening: _ws.treeOpening,
               ),
               size: Size(w, h),
             ),
@@ -125,7 +129,16 @@ class GamePainter extends CustomPainter {
   final int animTick;
   final double scale;
   final bool potionTaken;
+  final bool potionConsumed;
+  final double potionX;
+  final double potionY;
   final bool doorOpen;
+  final bool treeOpening;
+
+  // Tamaño de la poción en el suelo (igual que Android: POTION_FLOOR_SIZE=24)
+  static const double _potionFloorSize = 24.0;
+  // Tamaño de la poción sobre el portador (igual que Android: CARRIED_POTION_SIZE=20)
+  static const double _potionCarriedSize = 20.0;
 
   static const _bgOrder = ['bg3', 'bg2', 'bg'];
   static const _bgNames = {'bg', 'bg2', 'bg3'};
@@ -144,21 +157,28 @@ class GamePainter extends CustomPainter {
     required this.animTick,
     required this.scale,
     required this.potionTaken,
+    required this.potionConsumed,
+    required this.potionX,
+    required this.potionY,
     required this.doorOpen,
+    required this.treeOpening,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Todo se pinta en coordenadas lógicas 320x180 escaladas uniformemente.
-    // NO hay Y-flip. Las coordenadas del JSON son top-left, Y hacia abajo.
     canvas.save();
     canvas.scale(scale, scale);
 
     _drawBg(canvas);
     _drawTiles(canvas);
     _drawSprites(canvas);
+    if (doorOpen) _drawTreeAlive(canvas);
     for (final p in remotePlayers) {
       if (p.hasPosition) _drawCat(canvas, p);
+    }
+    // Poción sobre el portador (igual que Android: drawPotionOverCarrier)
+    for (final p in remotePlayers) {
+      if (p.hasPosition && p.hasPotion && !potionConsumed) _drawCarriedPotion(canvas, p);
     }
 
     canvas.restore();
@@ -222,7 +242,6 @@ class GamePainter extends CustomPainter {
   void _drawSprites(Canvas canvas) {
     for (final sprite in levelData.sprites) {
       if (sprite.name.startsWith('cat')) continue;
-      // Ocultar poción si fue recogida; ocultar árbol muerto si ya está abierto
       if (sprite.type == 'potion' && potionTaken) continue;
       if (sprite.type == 'dead_tree' && doorOpen) continue;
       if (sprite.imageFile.isEmpty) continue;
@@ -232,12 +251,12 @@ class GamePainter extends CustomPainter {
       final anim = levelData.animations[sprite.animationId];
       final anchorX = anim?.anchorX ?? 0.5;
       final anchorY = anim?.anchorY ?? 0.5;
-      final fw = (anim != null && anim.frameWidth > 0)
-          ? anim.frameWidth.toDouble()
-          : sprite.width;
-      final fh = (anim != null && anim.frameHeight > 0)
-          ? anim.frameHeight.toDouble()
-          : sprite.height;
+      final fw = (anim != null && anim.frameWidth > 0) ? anim.frameWidth.toDouble() : sprite.width;
+      final fh = (anim != null && anim.frameHeight > 0) ? anim.frameHeight.toDouble() : sprite.height;
+
+      // La poción en el suelo se dibuja pequeña (igual que Android)
+      final drawW = sprite.type == 'potion' ? _potionFloorSize : fw;
+      final drawH = sprite.type == 'potion' ? _potionFloorSize : fh;
 
       final cols = (img.width / fw).floor().clamp(1, 9999);
       final startFrame = anim?.startFrame ?? 0;
@@ -248,10 +267,63 @@ class GamePainter extends CustomPainter {
       final srcRow = frame ~/ cols;
       final srcCol = frame % cols;
       final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
-      final drawX = sprite.x - fw * anchorX;
-      final drawY = sprite.y - fh * anchorY;
-      canvas.drawImageRect(img, src, Rect.fromLTWH(drawX, drawY, fw, fh), Paint());
+      // Para la poción usamos su posición del servidor, no la del JSON
+      final dx = sprite.type == 'potion' ? potionX - drawW * anchorX : sprite.x - drawW * anchorX;
+      final dy = sprite.type == 'potion' ? potionY - drawH * anchorY : sprite.y - drawH * anchorY;
+      canvas.drawImageRect(img, src, Rect.fromLTWH(dx, dy, drawW, drawH), Paint());
     }
+  }
+
+  // Animación tree_alive cuando la poción cura el árbol
+  void _drawTreeAlive(Canvas canvas) {
+    final anim = levelData.animations['tree_alive'];
+    if (anim == null) return;
+    final img = sprites.get('assets/levels/${anim.mediaFile}');
+    if (img == null) return;
+
+    final fw = anim.frameWidth > 0 ? anim.frameWidth.toDouble() : 100.0;
+    final fh = anim.frameHeight > 0 ? anim.frameHeight.toDouble() : 100.0;
+    final cols = (img.width / fw).floor().clamp(1, 9999);
+    final startFrame = anim.startFrame;
+    final endFrame   = anim.endFrame;
+    final totalFrames = (endFrame - startFrame + 1).clamp(1, 9999);
+
+    // Si el árbol está abriendo, anima una vez; si ya está abierto, queda en el último frame
+    final frame = treeOpening
+        ? (startFrame + (animTick ~/ 4) % totalFrames)
+        : endFrame;
+
+    final srcRow = frame ~/ cols;
+    final srcCol = frame % cols;
+    final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
+
+    // Buscar posición del sprite dead_tree para pintar encima
+    SpriteData? treeSprite;
+    for (final s in levelData.sprites) {
+      if (s.type == 'dead_tree') { treeSprite = s; break; }
+    }
+    final treeAnim = treeSprite != null ? levelData.animations[treeSprite.animationId] : null;
+    final ax = treeAnim?.anchorX ?? anim.anchorX;
+    final ay = treeAnim?.anchorY ?? anim.anchorY;
+    final tx = treeSprite?.x ?? 285.0;
+    final ty = treeSprite?.y ?? 148.0;
+    canvas.drawImageRect(img, src, Rect.fromLTWH(tx - fw * ax, ty - fh * ay, fw, fh), Paint());
+  }
+
+  // Poción pequeña sobre la cabeza del portador (igual que Android: drawPotionOverCarrier)
+  void _drawCarriedPotion(Canvas canvas, RemotePlayer carrier) {
+    final img = sprites.get('assets/levels/media/Icon1(2)(2).png');
+    if (img == null) return;
+    const fw = 45.0;
+    const fh = 45.0;
+    final cols = (img.width / fw).floor().clamp(1, 9999);
+    final frame = (animTick ~/ 3) % 4;
+    final src = Rect.fromLTWH((frame % cols) * fw, (frame ~/ cols) * fh, fw, fh);
+    const size = _potionCarriedSize;
+    // Centrada horizontalmente, 30px por encima del punto de anclaje del gato
+    final dx = carrier.x - size * 0.5;
+    final dy = carrier.y - 30 - size * 0.5;
+    canvas.drawImageRect(img, src, Rect.fromLTWH(dx, dy, size, size), Paint());
   }
 
   // ── Jugadores ─────────────────────────────────────────────────────────────

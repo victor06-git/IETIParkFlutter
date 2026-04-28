@@ -13,6 +13,7 @@ class RemotePlayer {
   int frame;
   String dir;
   bool hasPosition;
+  bool hasPotion;
 
   RemotePlayer({
     required this.nickname,
@@ -23,6 +24,7 @@ class RemotePlayer {
     this.frame = 0,
     this.dir = 'RIGHT',
     this.hasPosition = false,
+    this.hasPotion = false,
   });
 }
 
@@ -35,7 +37,12 @@ class WebSocketService extends ChangeNotifier {
   final String serverUrl;
   final Map<String, RemotePlayer> remotePlayers = {};
   bool potionTaken = false;
+  bool potionConsumed = false;
   bool doorOpen = false;
+  bool treeOpening = false;
+  double potionX = 181;
+  double potionY = 118;
+  String potionCarrierId = '';
 
   bool get connected => _connected;
   String? get confirmedNickname => _confirmedNickname;
@@ -133,13 +140,19 @@ class WebSocketService extends ChangeNotifier {
             player.anim = p['anim'] as String? ?? player.anim;
             player.dir = (p['facingRight'] == true) ? 'RIGHT' : 'LEFT';
             player.cat = 'cat${p['cat'] ?? ''}';
+            player.hasPotion = p['hasPotion'] == true;
             player.hasPosition = true;
           }
           remotePlayers.removeWhere((k, _) => !activeNicks.contains(k));
           final world = msg['world'] as Map<String, dynamic>?;
           if (world != null) {
             potionTaken = world['potionTaken'] == true;
+            potionConsumed = world['potionConsumed'] == true;
             doorOpen = world['doorOpen'] == true;
+            treeOpening = world['treeOpening'] == true;
+            potionX = (world['potionX'] ?? 181).toDouble();
+            potionY = (world['potionY'] ?? 118).toDouble();
+            potionCarrierId = world['potionCarrierId'] as String? ?? '';
           }
           notifyListeners();
           break;
