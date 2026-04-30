@@ -3975,187 +3975,6 @@
       ]
     },
     {
-      "id": "anim_1776788964726637",
-      "name": "potionred",
-      "mediaFile": "media/Icon1.png",
-      "startFrame": 0,
-      "endFrame": 0,
-      "fps": 12.0,
-      "loop": true,
-      "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
-      "anchorColor": "red",
-      "hitBoxes": [
-        {
-          "id": "__hb_1776790504198266_0",
-          "name": "Hit Box 1",
-          "color": "green",
-          "x": 0.375,
-          "y": 0.03125,
-          "width": 0.28125,
-          "height": 0.9375
-        }
-      ],
-      "frameRigs": [
-        {
-          "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": [
-            {
-              "id": "__hb_1776790504198266_0",
-              "name": "Hit Box 1",
-              "color": "green",
-              "x": 0.375,
-              "y": 0.03125,
-              "width": 0.28125,
-              "height": 0.9375
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "anim_1777309191097741",
-      "name": "red_potion",
-      "mediaFile": "media/Icon1(2).png",
-      "startFrame": 0,
-      "endFrame": 3,
-      "fps": 9.0,
-      "loop": true,
-      "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
-      "anchorColor": "red",
-      "hitBoxes": [
-        {
-          "id": "__hb_1777383518686720_0",
-          "name": "Hit Box 1",
-          "color": "green",
-          "x": 0.376,
-          "y": 0.0,
-          "width": 0.28,
-          "height": 0.936
-        }
-      ],
-      "frameRigs": [
-        {
-          "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": [
-            {
-              "id": "__hb_1777383518686720_0",
-              "name": "Hit Box 1",
-              "color": "green",
-              "x": 0.376,
-              "y": 0.0,
-              "width": 0.28,
-              "height": 0.936
-            }
-          ]
-        },
-        {
-          "frame": 1,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": [
-            {
-              "id": "__hb_1777383518686720_0",
-              "name": "Hit Box 1",
-              "color": "green",
-              "x": 0.3724468320938215,
-              "y": 0.03594137347444701,
-              "width": 0.28,
-              "height": 0.936
-            }
-          ]
-        },
-        {
-          "frame": 2,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": [
-            {
-              "id": "__hb_1777383518686720_0",
-              "name": "Hit Box 1",
-              "color": "green",
-              "x": 0.3798585764683448,
-              "y": 0.06399999999999995,
-              "width": 0.28,
-              "height": 0.936
-            }
-          ]
-        },
-        {
-          "frame": 3,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": [
-            {
-              "id": "__hb_1777383518686720_0",
-              "name": "Hit Box 1",
-              "color": "green",
-              "x": 0.376,
-              "y": 0.0,
-              "width": 0.28,
-              "height": 0.936
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "anim_1777384363204458",
-      "name": "potion",
-      "mediaFile": "media/Icon1(2)(1).png",
-      "startFrame": 0,
-      "endFrame": 3,
-      "fps": 10.0,
-      "loop": true,
-      "groupId": "__main__",
-      "anchorX": 0.5,
-      "anchorY": 0.5,
-      "anchorColor": "red",
-      "hitBoxes": [],
-      "frameRigs": [
-        {
-          "frame": 0,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": []
-        },
-        {
-          "frame": 1,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": []
-        },
-        {
-          "frame": 2,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": []
-        },
-        {
-          "frame": 3,
-          "anchorX": 0.5,
-          "anchorY": 0.5,
-          "anchorColor": "red",
-          "hitBoxes": []
-        }
-      ]
-    },
-    {
       "id": "anim_1777384492009725",
       "name": "potion_red",
       "mediaFile": "media/Icon1(2)(2).png",
@@ -4252,7 +4071,7 @@
     {
       "id": "anim_1777384693370852",
       "name": "tree_died",
-      "mediaFile": "media/tree_die(1).png",
+      "mediaFile": "media/tree_die1.png",
       "startFrame": 0,
       "endFrame": 3,
       "fps": 12.0,
@@ -4346,7 +4165,7 @@
     {
       "id": "anim_1777384985403739",
       "name": "tree_alive",
-      "mediaFile": "media/tree_alive(1).png",
+      "mediaFile": "media/tree_alive1.png",
       "startFrame": 0,
       "endFrame": 3,
       "fps": 12.0,
@@ -4432,6 +4251,220 @@
               "y": 0.0,
               "width": 1.0,
               "height": 1.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anim_1777577672442746",
+      "name": "potion_green",
+      "mediaFile": "media/Icon7(2).png",
+      "startFrame": 0,
+      "endFrame": 3,
+      "fps": 5.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5101807860800889,
+      "anchorY": 0.6101375948664157,
+      "anchorColor": "red",
+      "hitBoxes": [
+        {
+          "id": "__hb_1777577693060280_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.25,
+          "y": 0.03125,
+          "width": 0.53125,
+          "height": 0.9375
+        }
+      ],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5101807860800889,
+          "anchorY": 0.6101375948664157,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777577693060280_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.03125,
+              "width": 0.53125,
+              "height": 0.9375
+            }
+          ]
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.51,
+          "anchorY": 0.61,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777577693060280_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.0,
+              "width": 0.53125,
+              "height": 0.9375
+            }
+          ]
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.5142299623619424,
+          "anchorY": 0.61,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777577693060280_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.03125,
+              "width": 0.53125,
+              "height": 0.9375
+            }
+          ]
+        },
+        {
+          "frame": 3,
+          "anchorX": 0.51,
+          "anchorY": 0.61,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777577693060280_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.25,
+              "y": 0.0625,
+              "width": 0.53125,
+              "height": 0.9375
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anim_1777578427524877",
+      "name": "button",
+      "mediaFile": "media/Icon7(5).png",
+      "startFrame": 0,
+      "endFrame": 2,
+      "fps": 12.0,
+      "loop": false,
+      "groupId": "__main__",
+      "anchorX": 0.539874745480348,
+      "anchorY": 0.9415144690565805,
+      "anchorColor": "red",
+      "hitBoxes": [
+        {
+          "id": "__hb_1777578508223644_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.34375,
+          "y": 0.875,
+          "width": 0.40625,
+          "height": 0.125
+        }
+      ],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.539874745480348,
+          "anchorY": 0.9415144690565805,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777578508223644_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.34375,
+              "y": 0.875,
+              "width": 0.40625,
+              "height": 0.125
+            }
+          ]
+        },
+        {
+          "frame": 1,
+          "anchorX": 0.539874745480348,
+          "anchorY": 0.9415144690565805,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777578505650117_1",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.34375,
+              "y": 0.90625,
+              "width": 0.40625,
+              "height": 0.09375
+            }
+          ]
+        },
+        {
+          "frame": 2,
+          "anchorX": 0.539874745480348,
+          "anchorY": 0.9415144690565805,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777578503678450_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.34375,
+              "y": 0.9375,
+              "width": 0.40625,
+              "height": 0.0625
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "anim_1777578845429821",
+      "name": "static_button",
+      "mediaFile": "media/Icon7(6).png",
+      "startFrame": 0,
+      "endFrame": 0,
+      "fps": 12.0,
+      "loop": true,
+      "groupId": "__main__",
+      "anchorX": 0.5448727116704806,
+      "anchorY": 0.934425057208238,
+      "anchorColor": "red",
+      "hitBoxes": [
+        {
+          "id": "__hb_1777578857807608_0",
+          "name": "Hit Box 1",
+          "color": "green",
+          "x": 0.34375,
+          "y": 0.875,
+          "width": 0.40625,
+          "height": 0.125
+        }
+      ],
+      "frameRigs": [
+        {
+          "frame": 0,
+          "anchorX": 0.5448727116704806,
+          "anchorY": 0.934425057208238,
+          "anchorColor": "red",
+          "hitBoxes": [
+            {
+              "id": "__hb_1777578857807608_0",
+              "name": "Hit Box 1",
+              "color": "green",
+              "x": 0.34375,
+              "y": 0.875,
+              "width": 0.40625,
+              "height": 0.125
             }
           ]
         }
