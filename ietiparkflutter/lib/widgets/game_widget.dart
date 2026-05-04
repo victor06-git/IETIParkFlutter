@@ -4,7 +4,6 @@ import '../models/game_models.dart';
 import '../services/websocket_service.dart';
 import '../services/sprite_loader.dart';
 
-// Tamaño lógico fijo del viewport del editor
 const double kWorldW = 320.0;
 const double kWorldH = 180.0;
 
@@ -16,7 +15,8 @@ class GameWidget extends StatefulWidget {
 }
 
 class _GameWidgetState extends State<GameWidget> {
-  LevelData? _levelData;
+  // Un LevelData por nivel (índice 0 y 1)
+  final List<LevelData?> _levels = [null, null];
   final SpriteLoader _sprites = SpriteLoader();
   late WebSocketService _ws;
   Timer? _renderTimer;
@@ -26,15 +26,12 @@ class _GameWidgetState extends State<GameWidget> {
   @override
   void initState() {
     super.initState();
-    LevelData.loadFromAssets().then((data) async {
-      _levelData = data;
-      await _loadAllAssets(data);
-      if (mounted) setState(() => _assetsReady = true);
-    });
-
     _ws = WebSocketService(serverUrl: 'wss://pico2.ieti.site');
     _ws.connect();
     _ws.addListener(_onWsUpdate);
+
+    // Cargar ambos niveles y todos los assets al inicio
+    _loadEverything();
 
     _renderTimer = Timer.periodic(const Duration(milliseconds: 50), (_) {
       _animTick++;
@@ -42,25 +39,45 @@ class _GameWidgetState extends State<GameWidget> {
     });
   }
 
-  Future<void> _loadAllAssets(LevelData data) async {
+  Future<void> _loadEverything() async {
+    final lv0 = await LevelData.loadLevel(0);
+    final lv1 = await LevelData.loadLevel(1);
+    _levels[0] = lv0;
+    _levels[1] = lv1;
+    await _loadAllAssets();
+    if (mounted) setState(() => _assetsReady = true);
+  }
+
+  Future<void> _loadAllAssets() async {
     final paths = <String>{};
-    for (final layer in data.layers) {
-      if (layer.tilesTexturePath.isNotEmpty) {
-        paths.add('assets/levels/${layer.tilesTexturePath}');
+
+    // Capas de ambos niveles
+    for (final lv in _levels) {
+      if (lv == null) continue;
+      for (final layer in lv.layers) {
+        if (layer.tilesTexturePath.isNotEmpty) {
+          paths.add('assets/levels/${layer.tilesTexturePath}');
+        }
       }
     }
+
+    // Gatos
     for (int i = 1; i <= 8; i++) {
       paths.add('assets/levels/media/idle_cat$i.png');
       paths.add('assets/levels/media/run_cat$i.png');
       paths.add('assets/levels/media/jump_cat$i.png');
     }
-    paths.add('assets/levels/media/shop_anim.png');
-    paths.add('assets/levels/media/tree1.png');
-    paths.add('assets/levels/media/Icon1.png');
-    // Árbol muerto/vivo y poción del nivel
-    paths.add('assets/levels/media/tree_die(1).png');
-    paths.add('assets/levels/media/tree_alive(1).png');
+
+    // Assets nivel 0: árbol muerto/vivo y poción roja
+    paths.add('assets/levels/media/tree_die1.png');
+    paths.add('assets/levels/media/tree_alive1.png');
     paths.add('assets/levels/media/Icon1(2)(2).png');
+
+    // Assets nivel 1: poción verde, botón, árbol
+    paths.add('assets/levels/media/Icon7(2).png');   // poción verde
+    paths.add('assets/levels/media/Icon7(5).png');   // botón animado
+    paths.add('assets/levels/media/Icon7(6).png');   // botón estático
+
     await _sprites.loadAll(paths.toList());
   }
 
@@ -79,12 +96,18 @@ class _GameWidgetState extends State<GameWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_assetsReady || _levelData == null) {
+    if (!_assetsReady) {
       return const Center(child: CircularProgressIndicator());
     }
 
+    final lvIdx = _ws.levelIndex.clamp(0, 1);
+    final levelData = _levels[lvIdx];
+    if (levelData == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+
     return LayoutBuilder(builder: (context, constraints) {
-      // Escala uniforme manteniendo aspecto 320x180
       final scale = (constraints.maxWidth / kWorldW)
           .clamp(0.0, constraints.maxHeight / kWorldH);
       final w = kWorldW * scale;
@@ -99,7 +122,8 @@ class _GameWidgetState extends State<GameWidget> {
             height: h,
             child: CustomPaint(
               painter: GamePainter(
-                levelData: _levelData!,
+                levelData: levelData,
+                levelIndex: lvIdx,
                 sprites: _sprites,
                 remotePlayers: _ws.remotePlayers.values.toList(),
                 connected: _ws.connected,
@@ -111,6 +135,14 @@ class _GameWidgetState extends State<GameWidget> {
                 potionY: _ws.potionY,
                 doorOpen: _ws.doorOpen,
                 treeOpening: _ws.treeOpening,
+                platformX: _ws.platformX,
+                platformY: _ws.platformY,
+                platformWidth: _ws.platformWidth,
+                platformHeight: _ws.platformHeight,
+                platformActive: _ws.platformActive,
+                buttonX: _ws.buttonX,
+                buttonY: _ws.buttonY,
+                buttonPressed: _ws.buttonPressed,
               ),
               size: Size(w, h),
             ),
@@ -123,6 +155,7 @@ class _GameWidgetState extends State<GameWidget> {
 
 class GamePainter extends CustomPainter {
   final LevelData levelData;
+  final int levelIndex;
   final SpriteLoader sprites;
   final List<RemotePlayer> remotePlayers;
   final bool connected;
@@ -134,10 +167,16 @@ class GamePainter extends CustomPainter {
   final double potionY;
   final bool doorOpen;
   final bool treeOpening;
+  final double platformX;
+  final double platformY;
+  final double platformWidth;
+  final double platformHeight;
+  final bool platformActive;
+  final double buttonX;
+  final double buttonY;
+  final bool buttonPressed;
 
-  // Tamaño de la poción en el suelo (igual que Android: POTION_FLOOR_SIZE=24)
   static const double _potionFloorSize = 24.0;
-  // Tamaño de la poción sobre el portador (igual que Android: CARRIED_POTION_SIZE=20)
   static const double _potionCarriedSize = 20.0;
 
   static const _bgOrder = ['bg3', 'bg2', 'bg'];
@@ -149,8 +188,18 @@ class GamePainter extends CustomPainter {
     'jump': (w: 20, h: 24, frames: 11),
   };
 
+  // Textura de poción según nivel
+  String get _potionTexture => levelIndex == 1
+      ? 'assets/levels/media/Icon7(2).png'
+      : 'assets/levels/media/Icon1(2)(2).png';
+  double get _potionFrameSize => levelIndex == 1 ? 32.0 : 45.0;
+
+  // Tipo de sprite de poción según nivel
+  String get _potionSpriteType => levelIndex == 1 ? 'green_potion' : 'potion';
+
   GamePainter({
     required this.levelData,
+    required this.levelIndex,
     required this.sprites,
     required this.remotePlayers,
     required this.connected,
@@ -162,6 +211,14 @@ class GamePainter extends CustomPainter {
     required this.potionY,
     required this.doorOpen,
     required this.treeOpening,
+    required this.platformX,
+    required this.platformY,
+    required this.platformWidth,
+    required this.platformHeight,
+    required this.platformActive,
+    required this.buttonX,
+    required this.buttonY,
+    required this.buttonPressed,
   });
 
   @override
@@ -171,12 +228,12 @@ class GamePainter extends CustomPainter {
 
     _drawBg(canvas);
     _drawTiles(canvas);
+    if (levelIndex == 1) _drawPlatform(canvas);
     _drawSprites(canvas);
     if (doorOpen) _drawTreeAlive(canvas);
     for (final p in remotePlayers) {
       if (p.hasPosition) _drawCat(canvas, p);
     }
-    // Poción sobre el portador (igual que Android: drawPotionOverCarrier)
     for (final p in remotePlayers) {
       if (p.hasPosition && p.hasPotion && !potionConsumed) _drawCarriedPotion(canvas, p);
     }
@@ -185,7 +242,6 @@ class GamePainter extends CustomPainter {
     _drawUI(canvas, size);
   }
 
-  // ── Fondos ────────────────────────────────────────────────────────────────
   void _drawBg(Canvas canvas) {
     final byName = {for (final l in levelData.layers) l.name: l};
     for (final name in _bgOrder) {
@@ -193,7 +249,6 @@ class GamePainter extends CustomPainter {
       if (layer == null || !layer.visible) continue;
       final img = sprites.get('assets/levels/${layer.tilesTexturePath}');
       if (img == null) continue;
-      // Pintar la imagen cubriendo todo el viewport 320x180
       canvas.drawImageRect(
         img,
         Rect.fromLTWH(0, 0, img.width.toDouble(), img.height.toDouble()),
@@ -203,7 +258,6 @@ class GamePainter extends CustomPainter {
     }
   }
 
-  // ── Tilemap ───────────────────────────────────────────────────────────────
   void _drawTiles(Canvas canvas) {
     for (final layer in levelData.layers) {
       if (_bgNames.contains(layer.name) || !layer.visible) continue;
@@ -216,6 +270,10 @@ class GamePainter extends CustomPainter {
       if (sheetCols <= 0) continue;
       for (int row = 0; row < layer.tiles.length; row++) {
         for (int col = 0; col < layer.tiles[row].length; col++) {
+          // En nivel 1, saltar los tiles de la plataforma (row=5, cols=9-13):
+          // se pintan dinámicamente en _drawPlatform con la posición del servidor.
+          if (levelIndex == 1 && layer.name == 'level' &&
+              row == 5 && col >= 9 && col <= 13) continue;
           final id = layer.tiles[row][col];
           if (id < 0) continue;
           final src = Rect.fromLTWH(
@@ -234,16 +292,44 @@ class GamePainter extends CustomPainter {
     }
   }
 
-  // ── Sprites estáticos ─────────────────────────────────────────────────────
-  // Coordenadas JSON: x,y = punto de anclaje del sprite (no top-left).
-  // anchorX/anchorY de la animación indican qué fracción del frame es el ancla.
-  // top-left del frame = (x - fw*anchorX,  y - fh*anchorY)
-  // NO hay Y-flip porque Flutter y el editor usan Y hacia abajo.
+  // Plataforma móvil del nivel 1: usa el mismo tileset que el nivel
+  void _drawPlatform(Canvas canvas) {
+    // Buscar la capa 'level' para usar su tileset
+    LayerData? levelLayer;
+    for (final l in levelData.layers) {
+      if (l.name == 'level') { levelLayer = l; break; }
+    }
+    if (levelLayer == null) return;
+    final img = sprites.get('assets/levels/${levelLayer.tilesTexturePath}');
+    if (img == null) return;
+
+    final tw = levelLayer.tileWidth.toDouble();
+    final th = levelLayer.tileHeight.toDouble();
+    if (tw <= 0 || th <= 0) return;
+    final sheetCols = img.width ~/ tw.toInt();
+    if (sheetCols <= 0) return;
+
+    // Tiles de la plataforma (igual que PlayScreen.java: LEVEL2_PLATFORM_TILE_INDICES)
+    const platformTiles = [205, 206, 207, 208, 209];
+    for (int i = 0; i < platformTiles.length; i++) {
+      final id = platformTiles[i];
+      final src = Rect.fromLTWH(
+        (id % sheetCols) * tw, (id ~/ sheetCols) * th, tw, th,
+      );
+      final dst = Rect.fromLTWH(platformX + i * tw, platformY, tw, th);
+      canvas.drawImageRect(img, src, dst, Paint());
+    }
+  }
+
   void _drawSprites(Canvas canvas) {
     for (final sprite in levelData.sprites) {
       if (sprite.name.startsWith('cat')) continue;
-      if (sprite.type == 'potion' && potionTaken) continue;
+      // Ocultar poción si fue recogida
+      if (sprite.type == _potionSpriteType && potionTaken) continue;
+      // Ocultar árbol muerto si ya está abierto
       if (sprite.type == 'dead_tree' && doorOpen) continue;
+      // El botón del nivel 1 se pinta con posición dinámica del servidor
+      if (sprite.type == 'button') continue;
       if (sprite.imageFile.isEmpty) continue;
       final img = sprites.get('assets/levels/${sprite.imageFile}');
       if (img == null) continue;
@@ -254,9 +340,9 @@ class GamePainter extends CustomPainter {
       final fw = (anim != null && anim.frameWidth > 0) ? anim.frameWidth.toDouble() : sprite.width;
       final fh = (anim != null && anim.frameHeight > 0) ? anim.frameHeight.toDouble() : sprite.height;
 
-      // La poción en el suelo se dibuja pequeña (igual que Android)
-      final drawW = sprite.type == 'potion' ? _potionFloorSize : fw;
-      final drawH = sprite.type == 'potion' ? _potionFloorSize : fh;
+      final isPotion = sprite.type == _potionSpriteType;
+      final drawW = isPotion ? _potionFloorSize : fw;
+      final drawH = isPotion ? _potionFloorSize : fh;
 
       final cols = (img.width / fw).floor().clamp(1, 9999);
       final startFrame = anim?.startFrame ?? 0;
@@ -264,17 +350,39 @@ class GamePainter extends CustomPainter {
       final totalFrames = (endFrame - startFrame + 1).clamp(1, 9999);
       final frame = startFrame + (animTick ~/ 3) % totalFrames;
 
-      final srcRow = frame ~/ cols;
-      final srcCol = frame % cols;
-      final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
-      // Para la poción usamos su posición del servidor, no la del JSON
-      final dx = sprite.type == 'potion' ? potionX - drawW * anchorX : sprite.x - drawW * anchorX;
-      final dy = sprite.type == 'potion' ? potionY - drawH * anchorY : sprite.y - drawH * anchorY;
+      final src = Rect.fromLTWH((frame % cols) * fw, (frame ~/ cols) * fh, fw, fh);
+      final dx = isPotion ? potionX - drawW * anchorX : sprite.x - drawW * anchorX;
+      final dy = isPotion ? potionY - drawH * anchorY : sprite.y - drawH * anchorY;
       canvas.drawImageRect(img, src, Rect.fromLTWH(dx, dy, drawW, drawH), Paint());
     }
+
+    // Botón del nivel 1 con posición dinámica del servidor
+    if (levelIndex == 1) _drawButton(canvas);
   }
 
-  // Animación tree_alive cuando la poción cura el árbol
+  void _drawButton(Canvas canvas) {
+    // Botón animado cuando está presionado, estático cuando no
+    final animName = buttonPressed ? 'button' : 'static_button';
+    final anim = levelData.animations[animName];
+    if (anim == null) return;
+    final img = sprites.get('assets/levels/${anim.mediaFile}');
+    if (img == null) return;
+
+    final fw = anim.frameWidth > 0 ? anim.frameWidth.toDouble() : 32.0;
+    final fh = anim.frameHeight > 0 ? anim.frameHeight.toDouble() : 32.0;
+    final cols = (img.width / fw).floor().clamp(1, 9999);
+    final startFrame = anim.startFrame;
+    final endFrame   = anim.endFrame;
+    final totalFrames = (endFrame - startFrame + 1).clamp(1, 9999);
+    final frame = startFrame + (animTick ~/ 3) % totalFrames;
+
+    final src = Rect.fromLTWH((frame % cols) * fw, (frame ~/ cols) * fh, fw, fh);
+    // buttonX/Y del servidor es el centro del botón
+    final dx = buttonX - fw * (anim.anchorX);
+    final dy = buttonY - fh * (anim.anchorY);
+    canvas.drawImageRect(img, src, Rect.fromLTWH(dx, dy, fw, fh), Paint());
+  }
+
   void _drawTreeAlive(Canvas canvas) {
     final anim = levelData.animations['tree_alive'];
     if (anim == null) return;
@@ -287,17 +395,12 @@ class GamePainter extends CustomPainter {
     final startFrame = anim.startFrame;
     final endFrame   = anim.endFrame;
     final totalFrames = (endFrame - startFrame + 1).clamp(1, 9999);
-
-    // Si el árbol está abriendo, anima una vez; si ya está abierto, queda en el último frame
     final frame = treeOpening
         ? (startFrame + (animTick ~/ 4) % totalFrames)
         : endFrame;
 
-    final srcRow = frame ~/ cols;
-    final srcCol = frame % cols;
-    final src = Rect.fromLTWH(srcCol * fw, srcRow * fh, fw, fh);
+    final src = Rect.fromLTWH((frame % cols) * fw, (frame ~/ cols) * fh, fw, fh);
 
-    // Buscar posición del sprite dead_tree para pintar encima
     SpriteData? treeSprite;
     for (final s in levelData.sprites) {
       if (s.type == 'dead_tree') { treeSprite = s; break; }
@@ -310,23 +413,20 @@ class GamePainter extends CustomPainter {
     canvas.drawImageRect(img, src, Rect.fromLTWH(tx - fw * ax, ty - fh * ay, fw, fh), Paint());
   }
 
-  // Poción pequeña sobre la cabeza del portador (igual que Android: drawPotionOverCarrier)
   void _drawCarriedPotion(Canvas canvas, RemotePlayer carrier) {
-    final img = sprites.get('assets/levels/media/Icon1(2)(2).png');
+    final img = sprites.get(_potionTexture);
     if (img == null) return;
-    const fw = 45.0;
-    const fh = 45.0;
+    final fw = _potionFrameSize;
+    final fh = _potionFrameSize;
     final cols = (img.width / fw).floor().clamp(1, 9999);
     final frame = (animTick ~/ 3) % 4;
     final src = Rect.fromLTWH((frame % cols) * fw, (frame ~/ cols) * fh, fw, fh);
     const size = _potionCarriedSize;
-    // Centrada horizontalmente, 30px por encima del punto de anclaje del gato
     final dx = carrier.x - size * 0.5;
     final dy = carrier.y - 30 - size * 0.5;
     canvas.drawImageRect(img, src, Rect.fromLTWH(dx, dy, size, size), Paint());
   }
 
-  // ── Jugadores ─────────────────────────────────────────────────────────────
   void _drawCat(Canvas canvas, RemotePlayer p) {
     final catNum = RegExp(r'cat(\d+)').firstMatch(p.cat)?.group(1);
     if (catNum == null) return;
@@ -341,25 +441,21 @@ class GamePainter extends CustomPainter {
     if (cols <= 0) return;
 
     final frame = (animTick ~/ 4) % info.frames;
-    final src = Rect.fromLTWH(
-      (frame % cols) * fw, (frame ~/ cols) * fh, fw, fh,
-    );
+    final src = Rect.fromLTWH((frame % cols) * fw, (frame ~/ cols) * fh, fw, fh);
 
     final anim = levelData.animations['${animType}_cat$catNum'];
     final anchorX = anim?.anchorX ?? 0.5;
     final anchorY = anim?.anchorY ?? 0.75;
-    final dw = fw;
-    final dh = fh;
-    final drawX = p.x - dw * anchorX;
-    final drawY = p.y - dh * anchorY;
+    final drawX = p.x - fw * anchorX;
+    final drawY = p.y - fh * anchorY;
 
     canvas.save();
     if (p.dir == 'LEFT') {
-      canvas.translate(drawX + dw, drawY);
+      canvas.translate(drawX + fw, drawY);
       canvas.scale(-1, 1);
-      canvas.drawImageRect(img, src, Rect.fromLTWH(0, 0, dw, dh), Paint());
+      canvas.drawImageRect(img, src, Rect.fromLTWH(0, 0, fw, fh), Paint());
     } else {
-      canvas.drawImageRect(img, src, Rect.fromLTWH(drawX, drawY, dw, dh), Paint());
+      canvas.drawImageRect(img, src, Rect.fromLTWH(drawX, drawY, fw, fh), Paint());
     }
     canvas.restore();
 
@@ -376,11 +472,10 @@ class GamePainter extends CustomPainter {
     tp.paint(canvas, Offset(p.x - tp.width / 2, drawY - 6));
   }
 
-  // ── UI ────────────────────────────────────────────────────────────────────
   void _drawUI(Canvas canvas, Size size) {
     final tp = TextPainter(
       text: TextSpan(
-        text: '${connected ? "Conectado" : "Desconectado"} | ${remotePlayers.length} jugadores',
+        text: '${connected ? "Conectado" : "Desconectado"} | ${remotePlayers.length} jugadores | Nivel $levelIndex',
         style: const TextStyle(
           color: Colors.white, fontSize: 11,
           fontWeight: FontWeight.bold, backgroundColor: Colors.black54,

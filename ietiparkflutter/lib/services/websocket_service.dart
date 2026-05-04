@@ -43,6 +43,17 @@ class WebSocketService extends ChangeNotifier {
   double potionX = 181;
   double potionY = 118;
   String potionCarrierId = '';
+  int levelIndex = 0;
+  double platformX = 144;
+  double platformY = 80;
+  double platformWidth = 78;
+  double platformHeight = 11;
+  bool platformActive = false;
+  double buttonX = 210;
+  double buttonY = 78;
+  bool buttonPressed = false;
+  bool shouldChangeScreen = false;
+  String changeReason = '';
 
   bool get connected => _connected;
   String? get confirmedNickname => _confirmedNickname;
@@ -146,6 +157,7 @@ class WebSocketService extends ChangeNotifier {
           remotePlayers.removeWhere((k, _) => !activeNicks.contains(k));
           final world = msg['world'] as Map<String, dynamic>?;
           if (world != null) {
+            levelIndex = (world['levelIndex'] ?? 0) as int;
             potionTaken = world['potionTaken'] == true;
             potionConsumed = world['potionConsumed'] == true;
             doorOpen = world['doorOpen'] == true;
@@ -153,6 +165,16 @@ class WebSocketService extends ChangeNotifier {
             potionX = (world['potionX'] ?? 181).toDouble();
             potionY = (world['potionY'] ?? 118).toDouble();
             potionCarrierId = world['potionCarrierId'] as String? ?? '';
+            platformX = (world['platformX'] ?? 144).toDouble();
+            platformY = (world['platformY'] ?? 80).toDouble();
+            platformWidth = (world['platformWidth'] ?? 78).toDouble();
+            platformHeight = (world['platformHeight'] ?? 11).toDouble();
+            platformActive = world['platformActive'] == true;
+            buttonX = (world['buttonX'] ?? 210).toDouble();
+            buttonY = (world['buttonY'] ?? 78).toDouble();
+            buttonPressed = world['buttonPressed'] == true;
+            shouldChangeScreen = world['shouldChangeScreen'] == true;
+            changeReason = world['changeReason'] as String? ?? '';
           }
           notifyListeners();
           break;

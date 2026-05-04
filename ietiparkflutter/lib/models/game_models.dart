@@ -133,28 +133,37 @@ class LevelData {
     required this.worldWidth, required this.worldHeight,
   });
 
-  static Future<LevelData> loadFromAssets() async {
+  // Carga un nivel concreto por índice (0 = nivel 0, 1 = nivel 1)
+  static Future<LevelData> loadLevel(int levelIndex) async {
     final gameDataStr = await rootBundle.loadString('assets/levels/game_data.json');
     final gameData = jsonDecode(gameDataStr);
-    final level = (gameData['levels'] as List).first;
+    final levels = gameData['levels'] as List;
+    final idx = levelIndex.clamp(0, levels.length - 1);
+    final level = levels[idx] as Map<String, dynamic>;
 
     final viewportW = (level['viewportWidth'] ?? 320).toDouble();
     final viewportH = (level['viewportHeight'] ?? 180).toDouble();
 
-    // Cargar zonas
-    final zonesStr = await rootBundle.loadString('assets/levels/zones/level_000_zones.json');
-    final zonesJson = jsonDecode(zonesStr);
-    final zones = (zonesJson['zones'] as List? ?? [])
-        .map((z) => Zone.fromJson(z)).toList();
+    // Zonas
+    final zonesFile = level['zonesFile'] as String?;
+    final zones = <Zone>[];
+    if (zonesFile != null) {
+      try {
+        final zonesStr = await rootBundle.loadString('assets/levels/$zonesFile');
+        final zonesJson = jsonDecode(zonesStr);
+        for (final z in (zonesJson['zones'] as List? ?? [])) {
+          zones.add(Zone.fromJson(z));
+        }
+      } catch (e) { debugPrint('Error cargando zonas: $e'); }
+    }
 
-    // Cargar capas con metadata del game_data
+    // Capas
     final layerDefs = level['layers'] as List? ?? [];
     final layers = <LayerData>[];
     for (int i = 0; i < layerDefs.length; i++) {
       final ld = layerDefs[i];
       final tileMapFile = ld['tileMapFile'] as String?;
       if (tileMapFile == null) continue;
-
       try {
         final tmStr = await rootBundle.loadString('assets/levels/$tileMapFile');
         final tmJson = jsonDecode(tmStr);
@@ -172,69 +181,47 @@ class LevelData {
           visible: ld['visible'] ?? true,
           tiles: tileMap,
         ));
-      } catch (e) {
-        debugPrint('Error cargando capa $i: $e');
-      }
+      } catch (e) { debugPrint('Error cargando capa $i: $e'); }
     }
 
-    // Cargar sprites estáticos
+    // Sprites
     final sprites = (level['sprites'] as List? ?? [])
         .map((s) => SpriteData.fromJson(s as Map<String, dynamic>))
         .toList();
 
-    // Cargar animaciones indexadas por id Y por nombre
+    // Animaciones (compartidas entre niveles)
     final animations = <String, AnimationData>{};
     try {
       final animStr = await rootBundle.loadString('assets/levels/animations/animations.json');
       final animJson = jsonDecode(animStr);
-
-      // Construir mapa mediaFile → (tileWidth, tileHeight) desde mediaAssets
       final mediaSizes = <String, (int, int)>{};
       for (final a in (gameData['mediaAssets'] as List? ?? [])) {
         final fileName = a['fileName'] as String? ?? '';
         final tw = a['tileWidth'] as int? ?? 0;
         final th = a['tileHeight'] as int? ?? 0;
-        if (fileName.isNotEmpty && tw > 0 && th > 0) {
-          mediaSizes[fileName] = (tw, th);
-        }
+        if (fileName.isNotEmpty && tw > 0 && th > 0) mediaSizes[fileName] = (tw, th);
       }
-
       for (final a in (animJson['animations'] as List? ?? [])) {
         final ad = AnimationData.fromJson(a, mediaSizes);
         animations[ad.id] = ad;
         animations[ad.name] = ad;
       }
-    } catch (e) {
-      debugPrint('Error cargando animaciones: $e');
-    }
+    } catch (e) { debugPrint('Error cargando animaciones: $e'); }
 
-    // worldWidth/worldHeight: igual que LevelLoader.java de Android
-    double ww = viewportW;
-    double wh = viewportH;
+    double ww = viewportW, wh = viewportH;
     for (final l in layers) {
       if (l.tiles.isEmpty) continue;
-      final layerRight = l.x + l.tiles[0].length * l.tileWidth;
-      final layerBottom = l.y + l.tiles.length * l.tileHeight;
-      if (layerRight > ww) ww = layerRight;
-      if (layerBottom > wh) wh = layerBottom;
+      ww = ww < l.x + l.tiles[0].length * l.tileWidth ? l.x + l.tiles[0].length * l.tileWidth : ww;
+      wh = wh < l.y + l.tiles.length * l.tileHeight ? l.y + l.tiles.length * l.tileHeight : wh;
     }
-    for (final s in sprites) {
-      final anim = animations[s.animationId];
-      final fw = (anim != null && anim.frameWidth > 0) ? anim.frameWidth.toDouble() : s.width;
-      final fh = (anim != null && anim.frameHeight > 0) ? anim.frameHeight.toDouble() : s.height;
-      final anchorX = anim?.anchorX ?? 0.5;
-      final anchorY = anim?.anchorY ?? 0.5;
-      final bottom = s.y - fh * anchorY + fh;
-      final right  = s.x - fw * anchorX + fw;
-      if (right  > ww) ww = right;
-      if (bottom > wh) wh = bottom;
-    }
-    debugPrint('world final: ${ww}x$wh');
 
     return LevelData(
       zones: zones, layers: layers, sprites: sprites, animations: animations,
-      levelName: 'Tutorial level',
+      levelName: level['name'] as String? ?? 'Level $idx',
       worldWidth: ww, worldHeight: wh,
     );
   }
+
+  // Compatibilidad: carga el nivel 0 por defecto
+  static Future<LevelData> loadFromAssets() => loadLevel(0);
 }

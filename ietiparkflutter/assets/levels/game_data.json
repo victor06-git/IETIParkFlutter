@@ -137,7 +137,7 @@
           "y": 148,
           "width": 100,
           "height": 100,
-          "imageFile": "media/tree_die(1).png",
+          "imageFile": "media/tree_die1.png",
           "flipX": false,
           "flipY": false,
           "depth": 0.0,
@@ -163,6 +163,153 @@
       "depthSensitivity": 0.08,
       "zonesFile": "zones/level_000_zones.json",
       "pathsFile": "paths/level_000_paths.json"
+    },
+    {
+      "name": "Level2",
+      "description": "",
+      "gameplayData": "",
+      "layers": [
+        {
+          "name": "level",
+          "gameplayData": "",
+          "x": 0,
+          "y": 0,
+          "depth": 0.0,
+          "tilesSheetFile": "media/Terrain_and_Props.png",
+          "tilesWidth": 16,
+          "tilesHeight": 16,
+          "visible": true,
+          "groupId": "__main__",
+          "tileMapFile": "tilemaps/level_001_layer_000.json"
+        },
+        {
+          "name": "bg",
+          "gameplayData": "",
+          "x": 0,
+          "y": 0,
+          "depth": 0.0,
+          "tilesSheetFile": "media/BG_1_1.png",
+          "tilesWidth": 320,
+          "tilesHeight": 180,
+          "visible": true,
+          "groupId": "__main__",
+          "tileMapFile": "tilemaps/level_001_layer_001.json"
+        },
+        {
+          "name": "bg2",
+          "gameplayData": "",
+          "x": 0,
+          "y": 0,
+          "depth": 0.0,
+          "tilesSheetFile": "media/BG_2_1.png",
+          "tilesWidth": 320,
+          "tilesHeight": 180,
+          "visible": true,
+          "groupId": "__main__",
+          "tileMapFile": "tilemaps/level_001_layer_002.json"
+        },
+        {
+          "name": "bg3",
+          "gameplayData": "",
+          "x": 0,
+          "y": 0,
+          "depth": 0.0,
+          "tilesSheetFile": "media/BG_3_1.png",
+          "tilesWidth": 320,
+          "tilesHeight": 180,
+          "visible": true,
+          "groupId": "__main__",
+          "tileMapFile": "tilemaps/level_001_layer_003.json"
+        }
+      ],
+      "layerGroups": [
+        {
+          "id": "__main__",
+          "name": "Main",
+          "collapsed": false
+        }
+      ],
+      "sprites": [
+        {
+          "name": "cat3",
+          "gameplayData": "",
+          "type": "cat3",
+          "animationId": "anim_1776698286238299",
+          "x": 19,
+          "y": 136,
+          "width": 16,
+          "height": 16,
+          "imageFile": "media/idle_cat3.png",
+          "flipX": false,
+          "flipY": false,
+          "depth": 0.0,
+          "groupId": "__main__"
+        },
+        {
+          "name": "dead_tree",
+          "gameplayData": "",
+          "type": "dead_tree",
+          "animationId": "anim_1777384693370852",
+          "x": 293,
+          "y": 111,
+          "width": 100,
+          "height": 100,
+          "imageFile": "media/tree_die1.png",
+          "flipX": false,
+          "flipY": false,
+          "depth": 0.0,
+          "groupId": "__main__"
+        },
+        {
+          "name": "green_potion",
+          "gameplayData": "",
+          "type": "green_potion",
+          "animationId": "anim_1777577672442746",
+          "x": 181,
+          "y": 66,
+          "width": 32,
+          "height": 32,
+          "imageFile": "media/Icon7(2).png",
+          "flipX": false,
+          "flipY": false,
+          "depth": 0.0,
+          "groupId": "__main__"
+        },
+        {
+          "name": "button",
+          "gameplayData": "",
+          "type": "button",
+          "animationId": "anim_1777578845429821",
+          "x": 210,
+          "y": 78,
+          "width": 32,
+          "height": 32,
+          "imageFile": "media/Icon7(6).png",
+          "flipX": false,
+          "flipY": false,
+          "depth": 0.0,
+          "groupId": "__main__"
+        }
+      ],
+      "spriteGroups": [
+        {
+          "id": "__main__",
+          "name": "Main",
+          "collapsed": false
+        }
+      ],
+      "groupId": "__main__",
+      "viewportWidth": 320,
+      "viewportHeight": 180,
+      "viewportX": 0,
+      "viewportY": 0,
+      "viewportAdaptation": "letterbox",
+      "viewportInitialColor": "green",
+      "viewportPreviewColor": "blue",
+      "backgroundColorHex": "#DCDCE1",
+      "depthSensitivity": 0.08,
+      "zonesFile": "zones/level_001_zones.json",
+      "pathsFile": "paths/level_001_paths.json"
     }
   ],
   "levelGroups": [
@@ -417,15 +564,6 @@
       "groupId": "__group_1776782473910706_0"
     },
     {
-      "name": "Red",
-      "fileName": "media/Icon1.png",
-      "mediaType": "spritesheet",
-      "tileWidth": 32,
-      "tileHeight": 32,
-      "selectionColorHex": "#FFCC00",
-      "groupId": "__group_1776782473910706_0"
-    },
-    {
       "name": "Orange",
       "fileName": "media/Icon17.png",
       "mediaType": "spritesheet",
@@ -540,23 +678,50 @@
       "tileWidth": 45,
       "tileHeight": 45,
       "selectionColorHex": "#FFCC00",
-      "groupId": "__main__"
+      "groupId": "__group_1776782473910706_0"
     },
     {
-      "name": "tree_died",
-      "fileName": "media/tree_die(1).png",
+      "name": "tree_die1",
+      "fileName": "media/tree_die1.png",
       "mediaType": "spritesheet",
       "tileWidth": 100,
       "tileHeight": 100,
       "selectionColorHex": "#FFCC00",
-      "groupId": "__main__"
+      "groupId": "__group_1776700017245398_0"
     },
     {
-      "name": "tree_alive",
-      "fileName": "media/tree_alive(1).png",
+      "name": "tree_alive1",
+      "fileName": "media/tree_alive1.png",
       "mediaType": "spritesheet",
       "tileWidth": 100,
       "tileHeight": 100,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776700017245398_0"
+    },
+    {
+      "name": "potion_green",
+      "fileName": "media/Icon7(2).png",
+      "mediaType": "spritesheet",
+      "tileWidth": 32,
+      "tileHeight": 32,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__group_1776782473910706_0"
+    },
+    {
+      "name": "button",
+      "fileName": "media/Icon7(5).png",
+      "mediaType": "spritesheet",
+      "tileWidth": 32,
+      "tileHeight": 32,
+      "selectionColorHex": "#FFCC00",
+      "groupId": "__main__"
+    },
+    {
+      "name": "static_button",
+      "fileName": "media/Icon7(6).png",
+      "mediaType": "spritesheet",
+      "tileWidth": 32,
+      "tileHeight": 32,
       "selectionColorHex": "#FFCC00",
       "groupId": "__main__"
     }
@@ -580,7 +745,7 @@
     {
       "id": "__group_1776782473910706_0",
       "name": "Potions",
-      "collapsed": true
+      "collapsed": false
     }
   ],
   "zoneTypes": [
@@ -599,6 +764,10 @@
     {
       "name": "arbre",
       "color": "purple"
+    },
+    {
+      "name": "death",
+      "color": "lightGreen"
     }
   ],
   "animationsFile": "animations/animations.json"

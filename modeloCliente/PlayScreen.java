@@ -77,9 +77,15 @@ public class PlayScreen extends ScreenAdapter {
     private int firstPlayerSpriteIndex;
     private int carriedPotionSpriteIndex = -1;
     private int treeSpriteIndex = -1;
+    private int buttonSpriteIndex = -1;
+    private int movingPlatformLayerIndex = -1;
+    private static final int[] LEVEL2_PLATFORM_TILE_INDICES = new int[] {205, 206, 207, 208, 209};
     private boolean treeWasOpening = false;
     private boolean treeAnimationFinished = false;
     private float treeAnimationTime = 0f;
+    private boolean buttonWasPressed = false;
+    private boolean buttonAnimationFinished = false;
+    private float buttonAnimationTime = 0f;
     private int joystickPointer = -1;
     private int actionPointer = -1;
     private float sendAccumulator = 0f;
@@ -94,10 +100,12 @@ public class PlayScreen extends ScreenAdapter {
         this.levelIndex = levelIndex;
         this.nickname = GameSession.sanitizeNickname(nickname);
         this.levelData = LevelLoader.loadLevel(levelIndex);
-        this.layerVisibilityStates = buildInitialLayerVisibility(levelData);
-        this.viewport = new FitViewport(levelData.viewportWidth, levelData.viewportHeight, camera);
         buildAnimationIndex();
         hideEditorCats();
+        hideStaticLevel2PlatformTiles();
+        addMovingPlatformVisualLayer();
+        this.layerVisibilityStates = buildInitialLayerVisibility(levelData);
+        this.viewport = new FitViewport(levelData.viewportWidth, levelData.viewportHeight, camera);
         addPlayerSlots();
         addSmallPotionSprite();
         initializeRuntimeStates();
@@ -131,6 +139,21 @@ public class PlayScreen extends ScreenAdapter {
         if (sendAccumulator >= FIXED_STEP_SECONDS || inputState.jumpPressed) {
             sendAccumulator = 0f;
             GameSession.get().sendInput(inputState.moveX, inputState.jumpPressed, inputState.jumpHeld);
+        }
+
+        GameSession.WorldState latestWorld = GameSession.get().snapshotWorld();
+        if (latestWorld != null && latestWorld.levelIndex != levelIndex) {
+            game.setScreen(new LoadingScreen(game, latestWorld.levelIndex, nickname));
+            return;
+        }
+        if (latestWorld != null
+            && latestWorld.shouldChangeScreen
+            && levelIndex == 1
+            && latestWorld.levelIndex == 1
+            && !"LOAD_LEVEL_1".equals(latestWorld.changeReason)) {
+            GameSession.get().disconnect();
+            game.setScreen(new EndScreen(game, true, nickname));
+            return;
         }
 
         applyNetworkState(delta);
@@ -169,7 +192,8 @@ public class PlayScreen extends ScreenAdapter {
             applyAnimation(slotIndex, animName, dt);
         }
 
-        // 2) Pintamos el mundo: árbol fijo y poción en el suelo o sobre su portador.
+        // 2) Pintamos el mundo: plataforma, árbol fijo y poción en el suelo o sobre su portador.
+        updateMovingPlatformVisualLayer(world);
         applyPotionAndTree(world, players);
     }
 
@@ -189,15 +213,25 @@ public class PlayScreen extends ScreenAdapter {
                 if (potionOnFloor) {
                     state.worldX = world.potionX;
                     state.worldY = world.potionY;
-                    // La poción usa frames de 45x45. No hay que aplicarle la escala de gato.
-                    applyWorldAnimation(i, "potion_red", Gdx.graphics.getDeltaTime(), POTION_FLOOR_SIZE, POTION_FLOOR_SIZE);
+                    if (world.levelIndex == 1) {
+                        applyWorldAnimationById(i, sprite.animationId, Gdx.graphics.getDeltaTime(), sprite.width, sprite.height);
+                    } else {
+                        // La poción roja del nivel 0 usa frames de 45x45 pero se dibuja pequeña en el mundo.
+                        applyWorldAnimation(i, "potion_red", Gdx.graphics.getDeltaTime(), POTION_FLOOR_SIZE, POTION_FLOOR_SIZE);
+                    }
                 }
+            }
+
+            if (type.contains("button")) {
+                buttonSpriteIndex = i;
+                state.visible = world.levelIndex == 1;
+                state.worldX = world.buttonX;
+                state.worldY = world.buttonY;
+                updateButtonAnimation(i, sprite, world.buttonPressed);
             }
 
             if (type.contains("tree")) {
                 treeSpriteIndex = i;
-                state.worldX = world.doorX + world.doorWidth * 0.5f;
-                state.worldY = world.doorY + world.doorHeight;
             }
         }
 
@@ -228,12 +262,9 @@ public class PlayScreen extends ScreenAdapter {
             treeWasOpening = false;
             treeAnimationFinished = false;
             treeAnimationTime = 0f;
+            // El árbol muerto también es un spritesheet, pero siempre se dibuja a 100x100.
             applyWorldAnimation(treeSpriteIndex, "tree_died", Gdx.graphics.getDeltaTime(), TREE_DRAW_SIZE, TREE_DRAW_SIZE);
         }
-        // Anclar el árbol por la base para que coincida con worldY = doorY + doorHeight
-        LevelRenderer.SpriteRuntimeState treeState = spriteRuntimeStates.get(treeSpriteIndex);
-        treeState.anchorX = 0.5f;
-        treeState.anchorY = 1.0f;
     }
 
     private void playTreeAliveOnce(int spriteIndex) {
@@ -314,7 +345,6 @@ public class PlayScreen extends ScreenAdapter {
         if (clip == null) return;
 
         LevelRenderer.SpriteRuntimeState state = spriteRuntimeStates.get(spriteIndex);
-        state.visible = true;
         state.animationId = id;
         state.texturePath = clip.texturePath;
         state.frameWidth = clip.frameWidth;
@@ -331,6 +361,148 @@ public class PlayScreen extends ScreenAdapter {
         int end = Math.max(start, Math.min(total - 1, clip.endFrame));
         int span = Math.max(1, end - start + 1);
         state.frameIndex = start + ((int)(elapsed * Math.max(1f, clip.fps)) % span);
+    }
+
+
+    private void applyWorldAnimationById(int spriteIndex, String animationId, float dt, float drawWidth, float drawHeight) {
+        if (animationId == null || spriteIndex < 0 || spriteIndex >= spriteRuntimeStates.size) return;
+        LevelData.AnimationClip clip = levelData.animationClips.get(animationId);
+        if (clip == null) return;
+
+        LevelRenderer.SpriteRuntimeState state = spriteRuntimeStates.get(spriteIndex);
+        state.animationId = animationId;
+        state.texturePath = clip.texturePath;
+        state.frameWidth = clip.frameWidth;
+        state.frameHeight = clip.frameHeight;
+        state.drawWidth = drawWidth;
+        state.drawHeight = drawHeight;
+        state.anchorX = clip.anchorX;
+        state.anchorY = clip.anchorY;
+
+        float elapsed = animationElapsed.get(spriteIndex) + dt;
+        animationElapsed.set(spriteIndex, elapsed);
+        int total = totalFrames(state.texturePath, state.frameWidth, state.frameHeight);
+        int start = Math.max(0, Math.min(total - 1, clip.startFrame));
+        int end = Math.max(start, Math.min(total - 1, clip.endFrame));
+        int span = Math.max(1, end - start + 1);
+        state.frameIndex = start + ((int)(elapsed * Math.max(1f, clip.fps)) % span);
+    }
+
+    private void updateButtonAnimation(int spriteIndex, LevelData.LevelSprite sprite, boolean pressed) {
+        if (spriteIndex < 0 || spriteIndex >= spriteRuntimeStates.size || sprite == null) return;
+        LevelData.AnimationClip clip = levelData.animationClips.get(sprite.animationId);
+        if (clip == null) return;
+
+        LevelRenderer.SpriteRuntimeState state = spriteRuntimeStates.get(spriteIndex);
+        state.animationId = sprite.animationId;
+        state.texturePath = clip.texturePath;
+        state.frameWidth = clip.frameWidth;
+        state.frameHeight = clip.frameHeight;
+        state.drawWidth = sprite.width;
+        state.drawHeight = sprite.height;
+        state.anchorX = clip.anchorX;
+        state.anchorY = clip.anchorY;
+
+        int total = totalFrames(state.texturePath, state.frameWidth, state.frameHeight);
+        int start = Math.max(0, Math.min(total - 1, clip.startFrame));
+        int end = Math.max(start, Math.min(total - 1, clip.endFrame));
+
+        if (!pressed) {
+            buttonWasPressed = false;
+            buttonAnimationFinished = false;
+            buttonAnimationTime = 0f;
+            state.frameIndex = start;
+            return;
+        }
+
+        if (!buttonWasPressed) {
+            buttonWasPressed = true;
+            buttonAnimationFinished = false;
+            buttonAnimationTime = 0f;
+        }
+
+        if (!buttonAnimationFinished) {
+            buttonAnimationTime += Gdx.graphics.getDeltaTime();
+            int frame = start + (int)(buttonAnimationTime * Math.max(1f, clip.fps));
+            if (frame >= end) {
+                frame = end;
+                buttonAnimationFinished = true;
+            }
+            state.frameIndex = frame;
+        } else {
+            state.frameIndex = end;
+        }
+    }
+
+    private void hideStaticLevel2PlatformTiles() {
+        if (levelIndex != 1 || levelData == null || levelData.layers == null) return;
+        for (int i = 0; i < levelData.layers.size; i++) {
+            LevelData.LevelLayer layer = levelData.layers.get(i);
+            if (layer == null || layer.tileMap == null || !normalize(layer.name).contains("level")) continue;
+            for (int row = 0; row < layer.tileMap.length; row++) {
+                int[] rowData = layer.tileMap[row];
+                if (rowData == null || rowData.length < LEVEL2_PLATFORM_TILE_INDICES.length) continue;
+                for (int col = 0; col <= rowData.length - LEVEL2_PLATFORM_TILE_INDICES.length; col++) {
+                    boolean match = true;
+                    for (int k = 0; k < LEVEL2_PLATFORM_TILE_INDICES.length; k++) {
+                        if (rowData[col + k] != LEVEL2_PLATFORM_TILE_INDICES[k]) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        for (int k = 0; k < LEVEL2_PLATFORM_TILE_INDICES.length; k++) {
+                            rowData[col + k] = -1;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void addMovingPlatformVisualLayer() {
+        if (levelIndex != 1) return;
+        LevelData.LevelLayer sourceLayer = null;
+        for (int i = 0; i < levelData.layers.size; i++) {
+            LevelData.LevelLayer layer = levelData.layers.get(i);
+            if (layer != null && normalize(layer.name).contains("level")) {
+                sourceLayer = layer;
+                break;
+            }
+        }
+        if (sourceLayer == null || sourceLayer.tilesTexturePath == null || sourceLayer.tilesTexturePath.isEmpty()) return;
+
+        int[][] tileMap = new int[1][LEVEL2_PLATFORM_TILE_INDICES.length];
+        for (int i = 0; i < LEVEL2_PLATFORM_TILE_INDICES.length; i++) {
+            tileMap[0][i] = LEVEL2_PLATFORM_TILE_INDICES[i];
+        }
+
+        LevelData.LevelLayer movingLayer = new LevelData.LevelLayer(
+            "moving_platform_visual",
+            true,
+            sourceLayer.depth,
+            -200f,
+            -200f,
+            sourceLayer.tilesTexturePath,
+            sourceLayer.tileWidth,
+            sourceLayer.tileHeight,
+            tileMap
+        );
+        levelData.layers.insert(0, movingLayer);
+        movingPlatformLayerIndex = 0;
+    }
+
+    private void updateMovingPlatformVisualLayer(GameSession.WorldState world) {
+        if (world == null || world.levelIndex != 1 || movingPlatformLayerIndex < 0) return;
+        if (movingPlatformLayerIndex >= 0 && movingPlatformLayerIndex < layerRuntimeStates.size) {
+            RuntimeTransform runtime = layerRuntimeStates.get(movingPlatformLayerIndex);
+            runtime.x = world.platformX;
+            runtime.y = world.platformY;
+        }
+        if (movingPlatformLayerIndex >= 0 && movingPlatformLayerIndex < layerVisibilityStates.length) {
+            layerVisibilityStates[movingPlatformLayerIndex] = true;
+        }
     }
 
     private int totalFrames(String path, int fw, int fh) {
@@ -435,6 +607,15 @@ public class PlayScreen extends ScreenAdapter {
         Texture potionTexture = game.getAssetManager().get(texturePath, Texture.class);
         int frameW = 45;
         int frameH = 45;
+        for (int i = 0; i < levelData.sprites.size; i++) {
+            LevelData.LevelSprite s = levelData.sprites.get(i);
+            String type = normalize(s.type + " " + s.name);
+            if (type.contains("potion") && !type.contains("carried")) {
+                LevelData.AnimationClip clip = levelData.animationClips.get(s.animationId);
+                if (clip != null) { frameW = clip.frameWidth; frameH = clip.frameHeight; }
+                break;
+            }
+        }
         int cols = Math.max(1, potionTexture.getWidth() / frameW);
         int rows = Math.max(1, potionTexture.getHeight() / frameH);
         int total = Math.max(1, cols * rows);
