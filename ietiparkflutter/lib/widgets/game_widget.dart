@@ -22,6 +22,7 @@ class _GameWidgetState extends State<GameWidget> {
   Timer? _renderTimer;
   bool _assetsReady = false;
   int _animTick = 0;
+  bool _gameFinished = false;
 
   @override
   void initState() {
@@ -82,7 +83,52 @@ class _GameWidgetState extends State<GameWidget> {
   }
 
   void _onWsUpdate() {
+    if (!_gameFinished &&
+        _ws.shouldChangeScreen &&
+        _ws.changeReason == 'ALL_PLAYERS_FINISHED_FINAL_LEVEL') {
+      _gameFinished = true;
+    }
     if (mounted) setState(() {});
+  }
+
+  Widget _buildFinishedScreen() {
+    return Container(
+      color: const Color(0xFF0A1A0F),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              '\u00a1Partida Finalizada!',
+              style: TextStyle(
+                color: Color(0xFF35FF74),
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              '\u00a1Todos los jugadores han completado\nlos dos niveles!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(height: 48),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF35FF74),
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+              ),
+              onPressed: () => setState(() => _gameFinished = false),
+              child: const Text('Volver a observar', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -98,6 +144,10 @@ class _GameWidgetState extends State<GameWidget> {
   Widget build(BuildContext context) {
     if (!_assetsReady) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_gameFinished) {
+      return _buildFinishedScreen();
     }
 
     final lvIdx = _ws.levelIndex.clamp(0, 1);

@@ -123,7 +123,6 @@ class WebSocketService extends ChangeNotifier {
 
         case 'PLAYER_LIST':
           final players = msg['players'] as List<dynamic>? ?? [];
-          // No borramos posiciones existentes, solo actualizamos la lista
           final currentNicks = <String>{};
           for (final p in players) {
             final nick = p['nickname'] as String? ?? '';
@@ -133,8 +132,12 @@ class WebSocketService extends ChangeNotifier {
             remotePlayers.putIfAbsent(nick, () => RemotePlayer(nickname: nick));
             remotePlayers[nick]!.cat = cat;
           }
-          // Eliminar jugadores que ya no están
           remotePlayers.removeWhere((k, _) => !currentNicks.contains(k));
+          final worldPL = msg['world'] as Map<String, dynamic>?;
+          if (worldPL != null) {
+            shouldChangeScreen = worldPL['shouldChangeScreen'] == true;
+            changeReason = worldPL['changeReason'] as String? ?? '';
+          }
           notifyListeners();
           break;
 
